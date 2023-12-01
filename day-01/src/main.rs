@@ -17,8 +17,8 @@ use std::fs::read_to_string;
 #[cfg(not(tarpaulin_include))]
 fn main() {
     let input = read_to_string("input.txt").expect("Unable to read input file");
-    println!("Part 1: {}", part1(input));
-    // println!("Part 2: {}", input);
+    println!("Part 1: {}", part1(input.clone()));
+    println!("Part 2: {}", part2(input));
 }
 
 fn part1(input: String) -> usize {
