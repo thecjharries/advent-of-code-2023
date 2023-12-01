@@ -17,11 +17,11 @@ use std::fs::read_to_string;
 #[cfg(not(tarpaulin_include))]
 fn main() {
     let input = read_to_string("input.txt").expect("Unable to read input file");
-    println!("Part 1: {}", input);
+    println!("Part 1: {}", part1(input));
     // println!("Part 2: {}", input);
 }
 
-fn part1(input: &str) -> usize {
+fn part1(input: String) -> usize {
     input
         .lines()
         .map(|line| {
@@ -32,6 +32,10 @@ fn part1(input: &str) -> usize {
             number.parse::<usize>().unwrap()
         })
         .sum()
+}
+
+fn part2(_input: String) -> usize {
+    0
 }
 
 #[cfg(not(tarpaulin_include))]
