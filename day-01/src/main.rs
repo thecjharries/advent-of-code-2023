@@ -29,4 +29,17 @@ fn part1(input: &str) -> usize {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn part1_should_handle_example() {
+        assert_eq!(
+            142,
+            part1(
+                "1abc2
+        pqr3stu8vwx
+        a1b2c3d4e5f
+        treb7uchet"
+            )
+        );
+    }
 }
