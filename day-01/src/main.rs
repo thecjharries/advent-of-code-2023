@@ -52,6 +52,24 @@ mod tests {
         pqr3stu8vwx
         a1b2c3d4e5f
         treb7uchet"
+                    .to_string()
+            )
+        );
+    }
+
+    #[test]
+    fn part2_should_handle_example() {
+        assert_eq!(
+            281,
+            part2(
+                "two1nine
+        eightwothree
+        abcone2threexyz
+        xtwone3four
+        4nineeightseven2
+        zoneight234
+        7pqrstsixteen"
+                    .to_string()
             )
         );
     }
