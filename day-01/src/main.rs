@@ -34,8 +34,55 @@ fn part1(input: String) -> usize {
         .sum()
 }
 
-fn part2(_input: String) -> usize {
-    0
+fn part2(input: String) -> usize {
+    let numbers = vec![
+        "one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
+    ];
+    input
+        .lines()
+        .map(|line| {
+            let mut number = String::new();
+            let haystack = line.trim().to_lowercase();
+            let haystack_chars: Vec<char> = haystack.chars().collect();
+            for index in 0..haystack_chars.len() {
+                if haystack_chars[index].is_numeric() {
+                    number.push(haystack_chars[index]);
+                    break;
+                } else {
+                    let mut found_number = false;
+                    for (number_index, number_name) in numbers.iter().enumerate() {
+                        if haystack[index..].starts_with(number_name) {
+                            number.push_str(&(number_index + 1).to_string());
+                            found_number = true;
+                            break;
+                        }
+                    }
+                    if found_number {
+                        break;
+                    }
+                }
+            }
+            for index in (0..haystack_chars.len()).rev() {
+                if haystack_chars[index].is_numeric() {
+                    number.push(haystack_chars[index]);
+                    break;
+                } else {
+                    let mut found_number = false;
+                    for (number_index, number_name) in numbers.iter().enumerate() {
+                        if haystack[..=index].ends_with(number_name) {
+                            number.push_str(&(number_index + 1).to_string());
+                            found_number = true;
+                            break;
+                        }
+                    }
+                    if found_number {
+                        break;
+                    }
+                }
+            }
+            number.parse::<usize>().unwrap()
+        })
+        .sum()
 }
 
 #[cfg(not(tarpaulin_include))]
