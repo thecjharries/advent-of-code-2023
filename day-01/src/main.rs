@@ -22,7 +22,16 @@ fn main() {
 }
 
 fn part1(input: &str) -> usize {
-    0
+    input
+        .lines()
+        .map(|line| {
+            let numbers: Vec<char> = line.chars().filter(|char| char.is_numeric()).collect();
+            let mut number = String::new();
+            number.push(*numbers.iter().next().unwrap());
+            number.push(*numbers.iter().last().unwrap());
+            number.parse::<usize>().unwrap()
+        })
+        .sum()
 }
 
 #[cfg(not(tarpaulin_include))]
