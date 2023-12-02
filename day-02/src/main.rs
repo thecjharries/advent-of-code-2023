@@ -21,6 +21,7 @@ fn main() {
     println!("Part 2: {}", part2(input));
 }
 
+#[derive(Debug, PartialEq)]
 struct Part1Game {
     id: u32,
     max_green: u32,
@@ -38,19 +39,35 @@ fn parse_part1_game(input: &str) -> Part1Game {
         .unwrap()
         .parse::<u32>()
         .unwrap();
-    let mut parts = parts.next().unwrap().split("; ");
+    let games = parts.next().unwrap();
+    let mut games = games.split("; ");
     let mut max_green = 0;
     let mut max_red = 0;
     let mut max_blue = 0;
-    for part in parts.next().unwrap().split(", ") {
-        let mut part = part.split(" ");
-        let number = part.next().unwrap().parse::<u32>().unwrap();
-        let color = part.next().unwrap();
-        match color {
-            "green" => max_green = number,
-            "red" => max_red = number,
-            "blue" => max_blue = number,
-            _ => panic!("Unknown color {}", color),
+    for game in games {
+        let mut colors = game.split(", ");
+        for color in colors {
+            let mut color = color.split(" ");
+            let count = color.next().unwrap().parse::<u32>().unwrap();
+            let color = color.next().unwrap();
+            match color {
+                "green" => {
+                    if count > max_green {
+                        max_green = count;
+                    }
+                }
+                "red" => {
+                    if count > max_red {
+                        max_red = count;
+                    }
+                }
+                "blue" => {
+                    if count > max_blue {
+                        max_blue = count;
+                    }
+                }
+                _ => {}
+            }
         }
     }
     Part1Game {
@@ -61,11 +78,11 @@ fn parse_part1_game(input: &str) -> Part1Game {
     }
 }
 
-fn part1(input: String) {
+fn part1(input: String) -> u32 {
     todo!()
 }
 
-fn part2(input: String) {
+fn part2(input: String) -> String {
     todo!()
 }
 
