@@ -21,6 +21,13 @@ fn main() {
     println!("Part 2: {}", part2(input));
 }
 
+struct Part1Game {
+    id: u32,
+    max_green: u32,
+    max_red: u32,
+    max_blue: u32,
+}
+
 fn part1(input: String) {
     todo!()
 }
