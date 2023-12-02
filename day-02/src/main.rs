@@ -30,6 +30,7 @@ struct Part1Game {
 }
 
 fn parse_part1_game(input: &str) -> Part1Game {
+    let input = input.trim();
     let mut parts = input.split(": ");
     let id = parts
         .next()
@@ -79,7 +80,18 @@ fn parse_part1_game(input: &str) -> Part1Game {
 }
 
 fn part1(input: String) -> u32 {
-    todo!()
+    input
+        .trim()
+        .lines()
+        .map(parse_part1_game)
+        .map(|game| {
+            if game.max_green <= 13 && game.max_red <= 12 && game.max_blue <= 14 {
+                game.id
+            } else {
+                0
+            }
+        })
+        .sum()
 }
 
 fn part2(input: String) -> String {
