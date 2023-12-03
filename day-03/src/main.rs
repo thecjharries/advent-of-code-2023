@@ -28,10 +28,10 @@ fn part1(input: String) -> u64 {
         .map(|line| line.trim().chars().collect::<Vec<char>>())
         .collect::<Vec<Vec<char>>>();
     let mut numbers: Vec<u64> = Vec::new();
+    let mut is_number = false;
+    let mut current_number = String::new();
+    let mut is_part_number = false;
     for row in 0..grid.len() {
-        let mut is_number = false;
-        let mut current_number = String::new();
-        let mut is_part_number = false;
         for column in 0..grid[row].len() {
             if grid[row][column].is_digit(10) {
                 is_number = true;
@@ -56,6 +56,10 @@ fn part1(input: String) -> u64 {
                             continue;
                         }
                         is_part_number = true;
+                        break;
+                    }
+                    if is_part_number {
+                        break;
                     }
                 }
             } else if is_number {
@@ -67,6 +71,22 @@ fn part1(input: String) -> u64 {
                 is_part_number = false;
             }
         }
+        if is_number {
+            is_number = false;
+            if is_part_number {
+                numbers.push(current_number.parse::<u64>().unwrap());
+            }
+            current_number = String::new();
+            is_part_number = false;
+        }
+    }
+    if is_number {
+        is_number = false;
+        if is_part_number {
+            numbers.push(current_number.parse::<u64>().unwrap());
+        }
+        current_number = String::new();
+        is_part_number = false;
     }
     numbers.iter().sum()
 }
@@ -82,20 +102,34 @@ mod tests {
 
     #[test]
     fn solves_part1() {
+        // assert_eq!(
+        //     4361,
+        //     part1(
+        //         "467..114..
+        //         ...*......
+        //         ..35..633.
+        //         ......#...
+        //         617*......
+        //         .....+.58.
+        //         ..592.....
+        //         ......755.
+        //         ...$.*....
+        //         .664.598..
+        //         "
+        //         .to_string()
+        //     )
+        // );
         assert_eq!(
-            4361,
+            44,
             part1(
-                "467..114..
-                ...*......
-                ..35..633.
-                ......#...
-                617*......
-                .....+.58.
-                ..592.....
-                ......755.
-                ...$.*....
-                .664.598..
-                "
+                "$..
+                .11
+                .11
+                $..
+                ..$
+                11.
+                11.
+                ..$"
                 .to_string()
             )
         );
