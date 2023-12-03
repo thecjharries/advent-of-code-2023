@@ -9,7 +9,7 @@ GIT ?= git
 RM ?= rm
 XDG_OPEN ?= xdg-open
 
-CURRENT_DIR := $(shell basename $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST)))))
+CURRENT_DIR := $(shell basename $(shell pwd))
 
 ifeq ($(YEAR),$(CURRENT_DIR))
 	ifeq (,$(DAY))
