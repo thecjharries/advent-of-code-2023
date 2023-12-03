@@ -23,7 +23,7 @@ fn main() {
 
 fn part1(input: String) -> u64 {
     let input = input.trim();
-    let mut grid = input
+    let grid = input
         .lines()
         .map(|line| line.trim().chars().collect::<Vec<char>>())
         .collect::<Vec<Vec<char>>>();
@@ -81,18 +81,87 @@ fn part1(input: String) -> u64 {
         }
     }
     if is_number {
-        is_number = false;
         if is_part_number {
             numbers.push(current_number.parse::<u64>().unwrap());
         }
-        current_number = String::new();
-        is_part_number = false;
     }
     numbers.iter().sum()
 }
 
-fn part2(input: String) -> String {
-    todo!()
+#[derive(Debug, PartialEq)]
+struct PartNumber {
+    number: u64,
+    x_min: usize,
+    x_max: usize,
+}
+
+fn parse_numbers_from_row(input: Vec<char>) -> Vec<PartNumber> {
+    let mut numbers: Vec<PartNumber> = Vec::new();
+    let mut is_number = false;
+    let mut current_number = String::new();
+    for column in 0..input.len() {
+        if input[column].is_digit(10) {
+            is_number = true;
+            current_number.push(input[column]);
+        } else if is_number {
+            is_number = false;
+            numbers.push(PartNumber {
+                number: current_number.parse::<u64>().unwrap(),
+                x_min: column - current_number.len(),
+                x_max: column,
+            });
+            current_number = String::new();
+        }
+    }
+    if is_number {
+        numbers.push(PartNumber {
+            number: current_number.parse::<u64>().unwrap(),
+            x_min: input.len() - current_number.len(),
+            x_max: input.len(),
+        });
+    }
+    numbers
+}
+
+fn part2(input: String) -> u64 {
+    let input = input.trim();
+    let grid = input
+        .lines()
+        .map(|line| line.trim().chars().collect::<Vec<char>>())
+        .collect::<Vec<Vec<char>>>();
+    let mut gear_positions: Vec<(usize, usize)> = Vec::new();
+    for row in 0..grid.len() {
+        for column in 0..grid[row].len() {
+            if '*' == grid[row][column] {
+                gear_positions.push((row, column));
+            }
+        }
+    }
+    let mut product = 0;
+    for gear_position in gear_positions {
+        let mut available_numbers: Vec<u64> = Vec::new();
+        for row_offset in -1..=1 {
+            let row = gear_position.0 as i64 + row_offset;
+            if row < 0 || row >= grid.len() as i64 {
+                continue;
+            }
+            let row_numbers = parse_numbers_from_row(grid[row as usize].clone());
+            let found_numbers = row_numbers
+                .iter()
+                .filter(|number| {
+                    gear_position.1 >= number.x_min.saturating_sub(1)
+                        && gear_position.1 < number.x_max.saturating_add(1)
+                })
+                .collect::<Vec<&PartNumber>>();
+            for found_number in found_numbers {
+                available_numbers.push(found_number.number);
+            }
+        }
+        if 2 == available_numbers.len() {
+            product += available_numbers[0] * available_numbers[1];
+        }
+    }
+    product
 }
 
 #[cfg(not(tarpaulin_include))]
@@ -130,6 +199,27 @@ mod tests {
                 11.
                 11.
                 ..$"
+                .to_string()
+            )
+        );
+    }
+
+    #[test]
+    fn solves_part2() {
+        assert_eq!(
+            467835,
+            part2(
+                "467..114..
+                ...*......
+                ..35..633.
+                ......#...
+                617*......
+                .....+.58.
+                ..592.....
+                ......755.
+                ...$.*....
+                .664.598..
+                "
                 .to_string()
             )
         );
