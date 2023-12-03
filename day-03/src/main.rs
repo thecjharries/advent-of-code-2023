@@ -80,11 +80,6 @@ fn part1(input: String) -> u64 {
             is_part_number = false;
         }
     }
-    if is_number {
-        if is_part_number {
-            numbers.push(current_number.parse::<u64>().unwrap());
-        }
-    }
     numbers.iter().sum()
 }
 
@@ -112,13 +107,6 @@ fn parse_numbers_from_row(input: Vec<char>) -> Vec<PartNumber> {
             });
             current_number = String::new();
         }
-    }
-    if is_number {
-        numbers.push(PartNumber {
-            number: current_number.parse::<u64>().unwrap(),
-            x_min: input.len() - current_number.len(),
-            x_max: input.len(),
-        });
     }
     numbers
 }
