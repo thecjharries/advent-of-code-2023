@@ -21,7 +21,7 @@ fn main() {
     println!("Part 2: {}", part2(input));
 }
 
-fn part1(input: String) -> String {
+fn part1(input: String) -> u64 {
     todo!()
 }
 
@@ -33,4 +33,25 @@ fn part2(input: String) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn solves_part1() {
+        assert_eq!(
+            4361,
+            part1(
+                "467..114..
+                ...*......
+                ..35..633.
+                ......#...
+                617*......
+                .....+.58.
+                ..592.....
+                ......755.
+                ...$.*....
+                .664.598..
+                "
+                .to_string()
+            )
+        );
+    }
 }
