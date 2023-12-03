@@ -9,12 +9,12 @@ GIT ?= git
 RM ?= rm
 XDG_OPEN ?= xdg-open
 
-CURRENT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+CURRENT_DIR := $(shell basename $(shell pwd))
 
 ifeq ($(YEAR),$(CURRENT_DIR))
-ifeq (,$(DAY))
-	DAY=$(shell printf "%02d" $(shell expr $(shell find . -maxdepth 1 -type d -name 'day-[0-9][0-9]' | sort -r | head -n 1 | sed -e 's/[^0-9]//g') + 1))
-endif
+	ifeq (,$(DAY))
+		DAY=$(shell printf "%02d" $(shell expr $(shell find . -maxdepth 1 -type d -name 'day-[0-9][0-9]' | sort -r | head -n 1 | sed -e 's/[^0-9]//g') + 1))
+	endif
 else
 	ifeq (,$(DAY))
 		DAY=$(shell pwd | sed 's/.*day-\([0-9][0-9]\).*/\1/')
@@ -33,8 +33,10 @@ NONZERO_DAY=$(shell echo $(DAY) | sed 's/^0*//')
 
 .PHONY: debug
 debug:
+	@echo "CURRENT_DIR: $(CURRENT_DIR)"
 	@echo "DAY: $(DAY)"
 	@echo "NONZERO_DAY: $(NONZERO_DAY)"
+	@echo "YEAR: $(YEAR)"
 
 .PHONY: new
 new:
