@@ -22,7 +22,53 @@ fn main() {
 }
 
 fn part1(input: String) -> u64 {
-    todo!()
+    let input = input.trim();
+    let mut grid = input
+        .lines()
+        .map(|line| line.trim().chars().collect::<Vec<char>>())
+        .collect::<Vec<Vec<char>>>();
+    let mut numbers: Vec<u64> = Vec::new();
+    for row in 0..grid.len() {
+        let mut is_number = false;
+        let mut current_number = String::new();
+        let mut is_part_number = false;
+        for column in 0..grid[row].len() {
+            if grid[row][column].is_digit(10) {
+                is_number = true;
+                current_number.push(grid[row][column]);
+                if is_part_number {
+                    continue;
+                }
+                for row_offset in -1..=1 {
+                    for column_offset in -1..=1 {
+                        if row_offset == 0 && column_offset == 0 {
+                            continue;
+                        }
+                        let neighbor_row = row as i64 + row_offset;
+                        let neighbor_column = column as i64 + column_offset;
+                        if neighbor_row < 0
+                            || neighbor_row >= grid.len() as i64
+                            || neighbor_column < 0
+                            || neighbor_column >= grid[row].len() as i64
+                            || grid[neighbor_row as usize][neighbor_column as usize].is_digit(10)
+                            || grid[neighbor_row as usize][neighbor_column as usize] == '.'
+                        {
+                            continue;
+                        }
+                        is_part_number = true;
+                    }
+                }
+            } else if is_number {
+                is_number = false;
+                if is_part_number {
+                    numbers.push(current_number.parse::<u64>().unwrap());
+                }
+                current_number = String::new();
+                is_part_number = false;
+            }
+        }
+    }
+    numbers.iter().sum()
 }
 
 fn part2(input: String) -> String {
