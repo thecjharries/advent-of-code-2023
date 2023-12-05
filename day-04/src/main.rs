@@ -27,6 +27,7 @@ struct Card {
     id: u32,
     winning: HashSet<u32>,
     available: HashSet<u32>,
+    intersection: usize,
 }
 
 fn parse_card(input: &str) -> Card {
@@ -45,8 +46,9 @@ fn parse_card(input: &str) -> Card {
     }
     Card {
         id,
-        winning,
-        available,
+        winning: winning.clone(),
+        available: available.clone(),
+        intersection: winning.intersection(&available).count(),
     }
 }
 
@@ -56,9 +58,8 @@ fn part1(input: String) -> u32 {
         .lines()
         .map(parse_card)
         .map(|card| {
-            let count = card.winning.intersection(&card.available).count();
-            if 0 < count {
-                2_u32.pow(count as u32 - 1)
+            if 0 < card.intersection {
+                2_u32.pow(card.intersection as u32 - 1)
             } else {
                 0
             }
@@ -67,6 +68,9 @@ fn part1(input: String) -> u32 {
 }
 
 fn part2(input: String) -> u32 {
+    let cards = input.trim().lines().map(parse_card).collect::<Vec<Card>>();
+    let mut card_counts = vec![1; cards.len()];
+    // for card in cards.iter() {}
     todo!()
 }
 
@@ -82,6 +86,7 @@ mod tests {
                 id: 1,
                 winning: vec![41, 48, 83, 86, 17].into_iter().collect(),
                 available: vec![83, 86, 6, 31, 17, 9, 48, 53].into_iter().collect(),
+                intersection: 4
             },
             parse_card("Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53")
         );
