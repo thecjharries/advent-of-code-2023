@@ -39,6 +39,14 @@ fn parse_to_map(input: &str) -> BTreeMap<usize, usize> {
     result
 }
 
+fn parse_seeds(input: &str) -> Vec<usize> {
+    let input = input.trim().strip_prefix("seeds: ").unwrap();
+    input
+        .split_whitespace()
+        .map(|seed| seed.parse::<usize>().unwrap())
+        .collect()
+}
+
 fn part1(input: String) -> usize {
     todo!()
 }
@@ -114,5 +122,10 @@ mod tests {
         "
             )
         );
+    }
+
+    #[test]
+    fn parses_seeds() {
+        assert_eq!(vec![79, 14, 55, 13], parse_seeds("seeds: 79 14 55 13"));
     }
 }
