@@ -32,7 +32,7 @@ struct Card {
 fn parse_card(input: &str) -> Card {
     let input = input.trim();
     let parts = input.split(": ").collect::<Vec<&str>>();
-    let id_parts = parts[0].split(" ").collect::<Vec<&str>>();
+    let id_parts = parts[0].split_whitespace().collect::<Vec<&str>>();
     let id = id_parts[1].parse::<u32>().unwrap();
     let mut winning = HashSet::new();
     let mut available = HashSet::new();
