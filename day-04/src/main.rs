@@ -51,7 +51,19 @@ fn parse_card(input: &str) -> Card {
 }
 
 fn part1(input: String) -> u32 {
-    todo!()
+    input
+        .trim()
+        .lines()
+        .map(parse_card)
+        .map(|card| {
+            let count = card.winning.intersection(&card.available).count();
+            if 0 < count {
+                2_u32.pow(count as u32 - 1)
+            } else {
+                0
+            }
+        })
+        .sum()
 }
 
 fn part2(input: String) -> u32 {
