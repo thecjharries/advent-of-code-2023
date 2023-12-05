@@ -21,11 +21,11 @@ fn main() {
     println!("Part 2: {}", part2(input));
 }
 
-fn part1(input: String) -> String {
+fn part1(input: String) -> usize {
     todo!()
 }
 
-fn part2(input: String) -> String {
+fn part2(input: String) -> usize {
     todo!()
 }
 
