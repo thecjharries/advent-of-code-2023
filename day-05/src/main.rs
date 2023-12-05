@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 use std::fs::read_to_string;
 
 #[cfg(not(tarpaulin_include))]
@@ -22,8 +22,21 @@ fn main() {
     println!("Part 2: {}", part2(input));
 }
 
-fn parse_to_map(input: &str) -> HashMap<usize, usize> {
-    todo!()
+fn parse_to_map(input: &str) -> BTreeMap<usize, usize> {
+    let input = input.trim();
+    let mut result = BTreeMap::new();
+    for line in input.lines() {
+        let line = line.trim();
+        let parts = line.split_whitespace().collect::<Vec<&str>>();
+        let value = parts[0].parse::<usize>().unwrap();
+        let key = parts[1].parse::<usize>().unwrap();
+        let max = parts[2].parse::<usize>().unwrap();
+
+        for index in 0..max {
+            result.insert(key + index, value + index);
+        }
+    }
+    result
 }
 
 fn part1(input: String) -> usize {
@@ -41,7 +54,7 @@ mod tests {
 
     #[test]
     fn parses_to_map() {
-        let map = HashMap::from_iter(vec![
+        let map = BTreeMap::from_iter(vec![
             (98, 50),
             (99, 51),
             (50, 52),
