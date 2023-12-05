@@ -70,8 +70,14 @@ fn part1(input: String) -> u32 {
 fn part2(input: String) -> u32 {
     let cards = input.trim().lines().map(parse_card).collect::<Vec<Card>>();
     let mut card_counts = vec![1; cards.len()];
-    // for card in cards.iter() {}
-    todo!()
+    for card in cards.iter() {
+        let index = card.id as usize - 1;
+        let current_count = card_counts[index];
+        for i in 1..=card.intersection {
+            card_counts[index + i] += current_count;
+        }
+    }
+    card_counts.iter().sum()
 }
 
 #[cfg(not(tarpaulin_include))]
