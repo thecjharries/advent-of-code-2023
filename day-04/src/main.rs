@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use std::collections::HashSet;
 use std::fs::read_to_string;
 
 #[cfg(not(tarpaulin_include))]
@@ -19,6 +20,34 @@ fn main() {
     let input = read_to_string("input.txt").expect("Unable to read input file");
     println!("Part 1: {}", part1(input.clone()));
     println!("Part 2: {}", part2(input));
+}
+
+#[derive(Debug, PartialEq)]
+struct Card {
+    id: u32,
+    winning: HashSet<u32>,
+    available: HashSet<u32>,
+}
+
+fn parse_card(input: &str) -> Card {
+    let input = input.trim();
+    let parts = input.split(": ").collect::<Vec<&str>>();
+    let id_parts = parts[0].split(" ").collect::<Vec<&str>>();
+    let id = id_parts[1].parse::<u32>().unwrap();
+    let mut winning = HashSet::new();
+    let mut available = HashSet::new();
+    let cards = parts[1].split(" | ").collect::<Vec<&str>>();
+    for card in cards[0].split_whitespace() {
+        winning.insert(card.parse::<u32>().unwrap());
+    }
+    for card in cards[1].split_whitespace() {
+        available.insert(card.parse::<u32>().unwrap());
+    }
+    Card {
+        id,
+        winning,
+        available,
+    }
 }
 
 fn part1(input: String) -> u32 {
@@ -33,6 +62,18 @@ fn part2(input: String) -> u32 {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn parses_card() {
+        assert_eq!(
+            Card {
+                id: 1,
+                winning: vec![41, 48, 83, 86, 17].into_iter().collect(),
+                available: vec![83, 86, 6, 31, 17, 9, 48, 53].into_iter().collect(),
+            },
+            parse_card("Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53")
+        );
+    }
 
     #[test]
     fn solves_part1() {
