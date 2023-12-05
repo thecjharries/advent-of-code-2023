@@ -47,6 +47,17 @@ fn parse_seeds(input: &str) -> Vec<usize> {
         .collect()
 }
 
+#[derive(Debug, PartialEq)]
+struct Garden {
+    seeds: Vec<usize>,
+    soil_to_fertilizer: BTreeMap<usize, usize>,
+    fertilizer_to_water: BTreeMap<usize, usize>,
+    water_to_light: BTreeMap<usize, usize>,
+    light_to_temperature: BTreeMap<usize, usize>,
+    temperature_to_humidity: BTreeMap<usize, usize>,
+    humidity_to_location: BTreeMap<usize, usize>,
+}
+
 fn part1(input: String) -> usize {
     todo!()
 }
