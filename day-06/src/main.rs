@@ -41,6 +41,19 @@ fn find_race_wins(time: u32, distance: u32) -> u32 {
     max - min + 1
 }
 
+fn parse_input(input: String) -> Vec<(u32, u32)> {
+    let input = input.trim();
+    let mut lines = input.lines();
+    let mut times = lines.next().unwrap().split_whitespace();
+    let mut distances = lines.next().unwrap().split_whitespace();
+    times.next();
+    distances.next();
+    times
+        .zip(distances)
+        .map(|(time, distance)| (time.parse().unwrap(), distance.parse().unwrap()))
+        .collect()
+}
+
 fn part1(input: String) -> usize {
     todo!()
 }
@@ -59,6 +72,19 @@ mod tests {
         assert_eq!(4, find_race_wins(7, 9));
         assert_eq!(8, find_race_wins(15, 40));
         assert_eq!(9, find_race_wins(30, 200));
+    }
+
+    #[test]
+    fn can_parse_input() {
+        assert_eq!(
+            vec![(7, 9), (15, 40), (30, 200),],
+            parse_input(
+                "Time:      7  15   30
+                Distance:  9  40  200
+                "
+                .to_string()
+            )
+        );
     }
 
     #[test]
