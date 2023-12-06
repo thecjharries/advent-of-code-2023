@@ -99,7 +99,28 @@ struct Garden {
 }
 
 fn part1(input: String) -> usize {
-    todo!()
+    let input = input.trim();
+    let mut chunks = input.split("\n\n");
+    let seeds = parse_seeds(chunks.next().unwrap());
+    let seed_to_soil = parse_to_map(chunks.next().unwrap());
+    let soil_to_fertilizer = parse_to_map(chunks.next().unwrap());
+    let fertilizer_to_water = parse_to_map(chunks.next().unwrap());
+    let water_to_light = parse_to_map(chunks.next().unwrap());
+    let light_to_temperature = parse_to_map(chunks.next().unwrap());
+    let temperature_to_humidity = parse_to_map(chunks.next().unwrap());
+    let humidity_to_location = parse_to_map(chunks.next().unwrap());
+    seeds
+        .iter()
+        .map(|seed| {
+            let soil = seed_to_soil.get_value(*seed);
+            let fertilizer = soil_to_fertilizer.get_value(soil);
+            let water = fertilizer_to_water.get_value(fertilizer);
+            let light = water_to_light.get_value(water);
+            let temperature = light_to_temperature.get_value(light);
+            let humidity = temperature_to_humidity.get_value(temperature);
+            humidity_to_location.get_value(humidity)
+        })
+        .fold(usize::MAX, |acc, location| acc.min(location))
 }
 
 fn part2(input: String) -> usize {
