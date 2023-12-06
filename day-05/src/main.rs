@@ -29,6 +29,20 @@ struct AocRange {
     base: usize,
 }
 
+impl AocRange {
+    fn contains(&self, value: usize) -> bool {
+        self.min <= value && value <= self.max
+    }
+
+    fn get_value(&self, value: usize) -> Option<usize> {
+        if self.contains(value) {
+            Some(self.base + value - self.min)
+        } else {
+            None
+        }
+    }
+}
+
 type AocMap = Vec<AocRange>;
 
 fn parse_to_map(input: &str) -> AocMap {
@@ -84,6 +98,18 @@ fn part2(input: String) -> usize {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn range_finds_values() {
+        let range = AocRange {
+            min: 98,
+            max: 99,
+            base: 50,
+        };
+        assert_eq!(Some(50), range.get_value(98));
+        assert_eq!(Some(51), range.get_value(99));
+        assert_eq!(None, range.get_value(97));
+    }
 
     #[test]
     fn parses_to_map() {
