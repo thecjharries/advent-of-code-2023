@@ -43,11 +43,23 @@ impl AocRange {
     }
 }
 
-type AocMap = Vec<AocRange>;
+#[derive(Debug, PartialEq)]
+struct AocMap(Vec<AocRange>);
+
+impl AocMap {
+    fn get_value(&self, value: usize) -> usize {
+        for range in &self.0 {
+            if range.contains(value) {
+                return range.get_value(value).unwrap();
+            }
+        }
+        value
+    }
+}
 
 fn parse_to_map(input: &str) -> AocMap {
     let input = input.trim();
-    let mut result = AocMap::new();
+    let mut result = Vec::new();
     for line in input.lines() {
         if line.ends_with(':') {
             continue;
@@ -63,7 +75,7 @@ fn parse_to_map(input: &str) -> AocMap {
             base: value,
         });
     }
-    result
+    AocMap(result)
 }
 
 fn parse_seeds(input: &str) -> Vec<usize> {
@@ -112,8 +124,8 @@ mod tests {
     }
 
     #[test]
-    fn parses_to_map() {
-        let map = vec![
+    fn map_finds_values() {
+        let map = AocMap(vec![
             AocRange {
                 min: 98,
                 max: 99,
@@ -124,7 +136,29 @@ mod tests {
                 max: 97,
                 base: 52,
             },
-        ];
+        ]);
+        assert_eq!(50, map.get_value(98));
+        assert_eq!(51, map.get_value(99));
+        assert_eq!(52, map.get_value(50));
+        assert_eq!(53, map.get_value(51));
+        assert_eq!(97, map.get_value(95));
+        assert_eq!(100, map.get_value(100));
+    }
+
+    #[test]
+    fn parses_to_map() {
+        let map = AocMap(vec![
+            AocRange {
+                min: 98,
+                max: 99,
+                base: 50,
+            },
+            AocRange {
+                min: 50,
+                max: 97,
+                base: 52,
+            },
+        ]);
         assert_eq!(
             map,
             parse_to_map(
