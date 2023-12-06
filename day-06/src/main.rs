@@ -21,8 +21,8 @@ fn main() {
     println!("Part 2: {}", part2(input));
 }
 
-fn find_race_wins(time: u32, distance: u32) -> u32 {
-    let mut min = u32::MAX;
+fn find_race_wins(time: usize, distance: usize) -> usize {
+    let mut min = usize::MAX;
     for speed in 1..time {
         let traveled = speed * (time - speed);
         if traveled > distance {
@@ -41,7 +41,7 @@ fn find_race_wins(time: u32, distance: u32) -> u32 {
     max - min + 1
 }
 
-fn parse_input(input: String) -> Vec<(u32, u32)> {
+fn parse_input(input: String) -> Vec<(usize, usize)> {
     let input = input.trim();
     let mut lines = input.lines();
     let mut times = lines.next().unwrap().split_whitespace();
@@ -55,7 +55,10 @@ fn parse_input(input: String) -> Vec<(u32, u32)> {
 }
 
 fn part1(input: String) -> usize {
-    todo!()
+    parse_input(input)
+        .iter()
+        .map(|(time, distance)| find_race_wins(*time, *distance))
+        .fold(1, |acc, x| acc * x)
 }
 
 fn part2(input: String) -> usize {
