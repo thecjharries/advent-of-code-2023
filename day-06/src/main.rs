@@ -62,7 +62,15 @@ fn part1(input: String) -> usize {
 }
 
 fn part2(input: String) -> usize {
-    todo!()
+    let input = input.trim();
+    let mut lines = input.lines();
+    let mut time_string = lines.next().unwrap().to_string();
+    time_string.retain(|c| c.is_numeric());
+    let time: usize = time_string.parse().unwrap();
+    let mut distance_string = lines.next().unwrap().to_string();
+    distance_string.retain(|c| c.is_numeric());
+    let distance: usize = distance_string.parse().unwrap();
+    find_race_wins(time, distance)
 }
 
 #[cfg(not(tarpaulin_include))]
@@ -95,6 +103,19 @@ mod tests {
         assert_eq!(
             288,
             part1(
+                "Time:      7  15   30
+                Distance:  9  40  200
+                "
+                .to_string()
+            )
+        );
+    }
+
+    #[test]
+    fn solves_part2() {
+        assert_eq!(
+            71503,
+            part2(
                 "Time:      7  15   30
                 Distance:  9  40  200
                 "
