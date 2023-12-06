@@ -22,9 +22,18 @@ fn main() {
     println!("Part 2: {}", part2(input));
 }
 
-fn parse_to_map(input: &str) -> BTreeMap<usize, usize> {
+#[derive(Debug, PartialEq)]
+struct AocRange {
+    min: usize,
+    max: usize,
+    base: usize,
+}
+
+type AocMap = Vec<AocRange>;
+
+fn parse_to_map(input: &str) -> AocMap {
     let input = input.trim();
-    let mut result = BTreeMap::new();
+    let mut result = AocMap::new();
     for line in input.lines() {
         if line.ends_with(':') {
             continue;
@@ -34,9 +43,11 @@ fn parse_to_map(input: &str) -> BTreeMap<usize, usize> {
         let value = parts[0].parse::<usize>().unwrap();
         let key = parts[1].parse::<usize>().unwrap();
         let max = parts[2].parse::<usize>().unwrap();
-        for index in 0..max {
-            result.insert(key + index, value + index);
-        }
+        result.push(AocRange {
+            min: key,
+            max: key + max - 1,
+            base: value,
+        });
     }
     result
 }
@@ -62,30 +73,7 @@ struct Garden {
 }
 
 fn part1(input: String) -> usize {
-    let input = input.trim();
-    let mut chunks = input.split("\n\n");
-    let seeds = parse_seeds(chunks.next().unwrap());
-    let seed_to_soil = parse_to_map(chunks.next().unwrap());
-    let soil_to_fertilizer = parse_to_map(chunks.next().unwrap());
-    let fertilizer_to_water = parse_to_map(chunks.next().unwrap());
-    let water_to_light = parse_to_map(chunks.next().unwrap());
-    let light_to_temperature = parse_to_map(chunks.next().unwrap());
-    let temperature_to_humidity = parse_to_map(chunks.next().unwrap());
-    let humidity_to_location = parse_to_map(chunks.next().unwrap());
-    seeds
-        .iter()
-        .map(|seed| {
-            let soil = seed_to_soil.get(&seed).unwrap_or(&seed);
-            let fertilizer = soil_to_fertilizer.get(&soil).unwrap_or(&soil);
-            let water = fertilizer_to_water.get(&fertilizer).unwrap_or(&fertilizer);
-            let light = water_to_light.get(&water).unwrap_or(&water);
-            let temperature = light_to_temperature.get(&light).unwrap_or(&light);
-            let humidity = temperature_to_humidity
-                .get(&temperature)
-                .unwrap_or(&temperature);
-            humidity_to_location.get(&humidity).unwrap_or(&humidity)
-        })
-        .fold(usize::MAX, |acc, location| acc.min(*location))
+    todo!()
 }
 
 fn part2(input: String) -> usize {
@@ -99,58 +87,18 @@ mod tests {
 
     #[test]
     fn parses_to_map() {
-        let map = BTreeMap::from_iter(vec![
-            (98, 50),
-            (99, 51),
-            (50, 52),
-            (51, 53),
-            (52, 54),
-            (53, 55),
-            (54, 56),
-            (55, 57),
-            (56, 58),
-            (57, 59),
-            (58, 60),
-            (59, 61),
-            (60, 62),
-            (61, 63),
-            (62, 64),
-            (63, 65),
-            (64, 66),
-            (65, 67),
-            (66, 68),
-            (67, 69),
-            (68, 70),
-            (69, 71),
-            (70, 72),
-            (71, 73),
-            (72, 74),
-            (73, 75),
-            (74, 76),
-            (75, 77),
-            (76, 78),
-            (77, 79),
-            (78, 80),
-            (79, 81),
-            (80, 82),
-            (81, 83),
-            (82, 84),
-            (83, 85),
-            (84, 86),
-            (85, 87),
-            (86, 88),
-            (87, 89),
-            (88, 90),
-            (89, 91),
-            (90, 92),
-            (91, 93),
-            (92, 94),
-            (93, 95),
-            (94, 96),
-            (95, 97),
-            (96, 98),
-            (97, 99),
-        ]);
+        let map = vec![
+            AocRange {
+                min: 98,
+                max: 99,
+                base: 50,
+            },
+            AocRange {
+                min: 50,
+                max: 97,
+                base: 52,
+            },
+        ];
         assert_eq!(
             map,
             parse_to_map(
