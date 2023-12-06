@@ -21,6 +21,10 @@ fn main() {
     println!("Part 2: {}", part2(input));
 }
 
+fn find_race_wins(time: u32, distance: u32) -> u32 {
+    todo!()
+}
+
 fn part1(input: String) -> usize {
     todo!()
 }
@@ -35,14 +39,22 @@ mod tests {
     use super::*;
 
     #[test]
-    fn solves_part1(
+    fn finds_proper_race_wins() {
+        assert_eq!(4, find_race_wins(7, 9));
+        assert_eq!(8, find_race_wins(15, 40));
+        assert_eq!(9, find_race_wins(30, 200));
+    }
+
+    #[test]
+    fn solves_part1() {
         assert_eq!(
             288,
             part1(
                 "Time:      7  15   30
                 Distance:  9  40  200
-                ".to_string()
+                "
+                .to_string()
             )
         );
-    )
+    }
 }
