@@ -139,7 +139,28 @@ fn part1(input: String) -> usize {
 }
 
 fn part2(input: String) -> usize {
-    todo!()
+    let input = input.trim();
+    let mut chunks = input.split("\n\n");
+    let seeds = parse_seeds_into_ranges(chunks.next().unwrap());
+    let seed_to_soil = parse_to_map(chunks.next().unwrap());
+    let soil_to_fertilizer = parse_to_map(chunks.next().unwrap());
+    let fertilizer_to_water = parse_to_map(chunks.next().unwrap());
+    let water_to_light = parse_to_map(chunks.next().unwrap());
+    let light_to_temperature = parse_to_map(chunks.next().unwrap());
+    let temperature_to_humidity = parse_to_map(chunks.next().unwrap());
+    let humidity_to_location = parse_to_map(chunks.next().unwrap());
+    seeds
+        .iter()
+        .map(|seed| {
+            let soil = seed_to_soil.get_value(*seed);
+            let fertilizer = soil_to_fertilizer.get_value(soil);
+            let water = fertilizer_to_water.get_value(fertilizer);
+            let light = water_to_light.get_value(water);
+            let temperature = light_to_temperature.get_value(light);
+            let humidity = temperature_to_humidity.get_value(temperature);
+            humidity_to_location.get_value(humidity)
+        })
+        .fold(usize::MAX, |acc, location| acc.min(location))
 }
 
 #[cfg(not(tarpaulin_include))]
@@ -263,5 +284,49 @@ mod tests {
             ],
             parse_seeds_into_ranges("seeds: 79 14 55 13")
         );
+    }
+
+    #[test]
+    fn solves_part2() {
+        assert_eq!(
+            46,
+            part2(
+                "seeds: 79 14 55 13
+
+                seed-to-soil map:
+                50 98 2
+                52 50 48
+
+                soil-to-fertilizer map:
+                0 15 37
+                37 52 2
+                39 0 15
+
+                fertilizer-to-water map:
+                49 53 8
+                0 11 42
+                42 0 7
+                57 7 4
+
+                water-to-light map:
+                88 18 7
+                18 25 70
+
+                light-to-temperature map:
+                45 77 23
+                81 45 19
+                68 64 13
+
+                temperature-to-humidity map:
+                0 69 1
+                1 0 69
+
+                humidity-to-location map:
+                60 56 37
+                56 93 4
+                "
+                .to_string()
+            )
+        )
     }
 }
