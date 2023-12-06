@@ -22,7 +22,23 @@ fn main() {
 }
 
 fn find_race_wins(time: u32, distance: u32) -> u32 {
-    todo!()
+    let mut min = u32::MAX;
+    for speed in 1..time {
+        let traveled = speed * (time - speed);
+        if traveled > distance {
+            min = speed;
+            break;
+        }
+    }
+    let mut max = 0;
+    for speed in ((min + 1)..time).rev() {
+        let traveled = speed * (time - speed);
+        if traveled > distance {
+            max = speed;
+            break;
+        }
+    }
+    max - min + 1
 }
 
 fn part1(input: String) -> usize {
