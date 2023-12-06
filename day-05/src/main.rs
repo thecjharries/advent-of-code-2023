@@ -86,6 +86,21 @@ fn parse_seeds(input: &str) -> Vec<usize> {
         .collect()
 }
 
+fn parse_seeds_into_ranges(input: &str) -> Vec<usize> {
+    let input = input.trim().strip_prefix("seeds: ").unwrap();
+    let numbers = input
+        .split_whitespace()
+        .map(|seed| seed.parse::<usize>().unwrap())
+        .collect::<Vec<usize>>();
+    let mut result = Vec::new();
+    for index in (0..numbers.len()).step_by(2) {
+        for number in numbers[index]..(numbers[index] + numbers[index + 1]) {
+            result.push(number);
+        }
+    }
+    result
+}
+
 #[derive(Debug, PartialEq)]
 struct Garden {
     seeds: Vec<usize>,
@@ -237,5 +252,16 @@ mod tests {
                 .to_string()
             )
         )
+    }
+
+    #[test]
+    fn parses_seeds_into_ranges() {
+        assert_eq!(
+            vec![
+                79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 55, 56, 57, 58, 59, 60, 61,
+                62, 63, 64, 65, 66, 67
+            ],
+            parse_seeds_into_ranges("seeds: 79 14 55 13")
+        );
     }
 }
