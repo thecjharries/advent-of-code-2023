@@ -98,11 +98,26 @@ impl Card {
     }
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Eq, Ord)]
 struct Hand {
     cards: Vec<Card>,
     rank: HandRanking,
     bid: usize,
+}
+
+impl PartialOrd for Hand {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        if self.rank == other.rank {
+            for index in 0..self.cards.len() {
+                if self.cards[index] != other.cards[index] {
+                    return Some(other.cards[index].cmp(&self.cards[index]));
+                }
+            }
+            Some(std::cmp::Ordering::Equal)
+        } else {
+            Some(other.rank.cmp(&self.rank))
+        }
+    }
 }
 
 impl Hand {
@@ -243,5 +258,26 @@ mod tests {
             },
             Hand::new_from_str("T55J5 684")
         )
+    }
+
+    #[test]
+    fn hands_can_be_properly_sorted() {
+        let mut input = vec![
+            Hand::new_from_str("32T3K 765"),
+            Hand::new_from_str("T55J5 684"),
+            Hand::new_from_str("KK677 28"),
+            Hand::new_from_str("KTJJT 220"),
+            Hand::new_from_str("QQQJA 483"),
+        ];
+        let output = vec![
+            Hand::new_from_str("QQQJA 483"),
+            Hand::new_from_str("T55J5 684"),
+            Hand::new_from_str("KK677 28"),
+            Hand::new_from_str("KTJJT 220"),
+            Hand::new_from_str("32T3K 765"),
+        ];
+        assert_ne!(input, output);
+        input.sort();
+        assert_eq!(input, output);
     }
 }
