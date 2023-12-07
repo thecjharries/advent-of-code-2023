@@ -31,6 +31,22 @@ enum Hands {
     FiveOfAKind = 6,
 }
 
+enum Card {
+    Two = 2,
+    Three = 3,
+    Four = 4,
+    Five = 5,
+    Six = 6,
+    Seven = 7,
+    Eight = 8,
+    Nine = 9,
+    Ten = 10, // T
+    Jack = 11, // J
+    Queen = 12, // Q
+    King = 13, // K
+    Ace = 14, // A
+}
+
 fn part1(input: String) -> usize {
     todo!()
 }
