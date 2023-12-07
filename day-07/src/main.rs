@@ -21,7 +21,7 @@ fn main() {
     println!("Part 2: {}", part2(input));
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(PartialOrd, Ord, Debug, PartialEq)]
 enum HandRanking {
     HighCard = 0,
     OnePair = 1,
@@ -32,7 +32,7 @@ enum HandRanking {
     FiveOfAKind = 6,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(PartialOrd, Ord, Debug, PartialEq)]
 enum Card {
     Two = 2,
     Three = 3,
