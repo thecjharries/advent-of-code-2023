@@ -21,7 +21,7 @@ fn main() {
     println!("Part 2: {}", part2(input));
 }
 
-#[derive(PartialOrd, Ord, Debug, PartialEq)]
+#[derive(PartialOrd, Ord, Eq, Debug, PartialEq, Clone)]
 enum HandRanking {
     HighCard = 0,
     OnePair = 1,
@@ -32,7 +32,35 @@ enum HandRanking {
     FiveOfAKind = 6,
 }
 
-#[derive(PartialOrd, Ord, Debug, PartialEq)]
+impl HandRanking {
+    fn from_cards(cards: Vec<Card>) -> Self {
+        let mut card_counts = [0; 15];
+        for card in cards {
+            card_counts[card as usize] += 1;
+        }
+        let mut counts = [0; 6];
+        for count in card_counts {
+            counts[count as usize] += 1;
+        }
+        if 1 == counts[5] {
+            HandRanking::FiveOfAKind
+        } else if 1 == counts[1] && 1 == counts[4] {
+            HandRanking::FourOfAKind
+        } else if 1 == counts[2] && 1 == counts[3] {
+            HandRanking::FullHouse
+        } else if 2 == counts[1] && 1 == counts[3] {
+            HandRanking::ThreeOfAKind
+        } else if 1 == counts[1] && 2 == counts[2] {
+            HandRanking::TwoPairs
+        } else if 3 == counts[1] && 1 == counts[2] {
+            HandRanking::OnePair
+        } else {
+            HandRanking::HighCard
+        }
+    }
+}
+
+#[derive(PartialOrd, Ord, Eq, Debug, PartialEq, Clone)]
 enum Card {
     Two = 2,
     Three = 3,
@@ -76,6 +104,21 @@ struct Hand {
     rank: HandRanking,
 }
 
+impl Hand {
+    fn new_from_str(input: &str) -> Self {
+        let mut cards = Vec::new();
+        for character in input.chars() {
+            if let Some(card) = Card::from_char(character) {
+                cards.push(card);
+            }
+        }
+        Hand {
+            cards,
+            rank: HandRanking::HighCard,
+        }
+    }
+}
+
 fn part1(input: String) -> usize {
     todo!()
 }
@@ -105,5 +148,83 @@ mod tests {
         assert_eq!(Some(Card::King), Card::from_char('K'));
         assert_eq!(Some(Card::Ace), Card::from_char('A'));
         assert_eq!(None, Card::from_char('X'));
+    }
+
+    #[test]
+    fn can_properly_rank_hands() {
+        assert_eq!(
+            HandRanking::HighCard,
+            HandRanking::from_cards(vec![
+                Card::Two,
+                Card::Three,
+                Card::Four,
+                Card::Five,
+                Card::Six
+            ])
+        );
+        assert_eq!(
+            HandRanking::OnePair,
+            HandRanking::from_cards(vec![
+                Card::Two,
+                Card::Two,
+                Card::Four,
+                Card::Five,
+                Card::Six
+            ])
+        );
+        assert_eq!(
+            HandRanking::TwoPairs,
+            HandRanking::from_cards(vec![
+                Card::Two,
+                Card::Two,
+                Card::Four,
+                Card::Four,
+                Card::Six
+            ])
+        );
+        assert_eq!(
+            HandRanking::ThreeOfAKind,
+            HandRanking::from_cards(vec![Card::Two, Card::Two, Card::Two, Card::Four, Card::Six])
+        );
+        assert_eq!(
+            HandRanking::FullHouse,
+            HandRanking::from_cards(vec![
+                Card::Two,
+                Card::Two,
+                Card::Two,
+                Card::Four,
+                Card::Four
+            ])
+        );
+        assert_eq!(
+            HandRanking::FourOfAKind,
+            HandRanking::from_cards(vec![Card::Two, Card::Two, Card::Two, Card::Two, Card::Four])
+        );
+        assert_eq!(
+            HandRanking::FiveOfAKind,
+            HandRanking::from_cards(vec![Card::Two, Card::Two, Card::Two, Card::Two, Card::Two])
+        );
+        // 32T3K
+        assert_eq!(
+            HandRanking::OnePair,
+            HandRanking::from_cards(vec![
+                Card::Three,
+                Card::Two,
+                Card::Ten,
+                Card::Two,
+                Card::King,
+            ])
+        );
+        // T55J5
+        assert_eq!(
+            HandRanking::ThreeOfAKind,
+            HandRanking::from_cards(vec![
+                Card::Ten,
+                Card::Five,
+                Card::Five,
+                Card::Jack,
+                Card::Five,
+            ])
+        );
     }
 }
