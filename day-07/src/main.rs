@@ -21,6 +21,16 @@ fn main() {
     println!("Part 2: {}", part2(input));
 }
 
+enum Hands {
+    HighCard = 0,
+    OnePair = 1,
+    TwoPairs = 2,
+    ThreeOfAKind = 3,
+    FullHouse = 4,
+    FourOfAKind = 5,
+    FiveOfAKind = 6,
+}
+
 fn part1(input: String) -> usize {
     todo!()
 }
