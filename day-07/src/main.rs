@@ -139,7 +139,18 @@ impl Hand {
 }
 
 fn part1(input: String) -> usize {
-    todo!()
+    let input = input.trim().to_uppercase();
+    let mut hands = input
+        .split('\n')
+        .map(|line| Hand::new_from_str(line))
+        .collect::<Vec<Hand>>();
+    hands.sort();
+    hands.reverse();
+    let mut sum = 0;
+    for (index, hand) in hands.iter().enumerate() {
+        sum += hand.bid * (index + 1);
+    }
+    sum
 }
 
 fn part2(input: String) -> usize {
@@ -279,5 +290,21 @@ mod tests {
         assert_ne!(input, output);
         input.sort();
         assert_eq!(input, output);
+    }
+
+    #[test]
+    fn solves_part1() {
+        assert_eq!(
+            6440,
+            part1(
+                "32T3K 765
+                T55J5 684
+                KK677 28
+                KTJJT 220
+                QQQJA 483
+                "
+                .to_string()
+            )
+        );
     }
 }
