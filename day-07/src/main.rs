@@ -113,8 +113,8 @@ impl Hand {
             }
         }
         Hand {
-            cards,
-            rank: HandRanking::HighCard,
+            cards: cards.clone(),
+            rank: HandRanking::from_cards(cards),
         }
     }
 }
@@ -226,5 +226,17 @@ mod tests {
                 Card::Five,
             ])
         );
+    }
+
+    #[test]
+    fn hand_can_create_from_str() {
+        // T55J5
+        assert_eq!(
+            Hand {
+                cards: vec![Card::Ten, Card::Five, Card::Five, Card::Jack, Card::Five,],
+                rank: HandRanking::ThreeOfAKind,
+            },
+            Hand::new_from_str("T55J5")
+        )
     }
 }
