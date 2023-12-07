@@ -70,6 +70,12 @@ impl Card {
     }
 }
 
+#[derive(Debug, PartialEq)]
+struct Hand {
+    cards: Vec<Card>,
+    rank: HandRanking,
+}
+
 fn part1(input: String) -> usize {
     todo!()
 }
