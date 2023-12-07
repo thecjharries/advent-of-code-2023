@@ -34,9 +34,15 @@ enum HandRanking {
 
 impl HandRanking {
     fn from_cards(cards: Vec<Card>) -> Self {
-        let mut card_counts = [0; 15];
+        let mut card_counts = [0; 13];
         for card in cards {
-            card_counts[card as usize] += 1;
+            if 0 == card as usize {
+                for index in 1..=12 {
+                    card_counts[index] += 1;
+                }
+            } else {
+                card_counts[card as usize] += 1;
+            }
         }
         let mut counts = [0; 6];
         for count in card_counts {
@@ -44,13 +50,13 @@ impl HandRanking {
         }
         if 1 == counts[5] {
             HandRanking::FiveOfAKind
-        } else if 1 == counts[1] && 1 == counts[4] {
+        } else if 1 == counts[4] || (1 == counts[1] && 1 == counts[4]) {
             HandRanking::FourOfAKind
-        } else if 1 == counts[2] && 1 == counts[3] {
+        } else if 2 <= counts[3] || (1 == counts[2] && 1 == counts[3]) {
             HandRanking::FullHouse
-        } else if 2 == counts[1] && 1 == counts[3] {
+        } else if 1 == counts[3] || (2 == counts[1] && 1 == counts[3]) {
             HandRanking::ThreeOfAKind
-        } else if 1 == counts[1] && 2 == counts[2] {
+        } else if 2 <= counts[2] {
             HandRanking::TwoPairs
         } else if 3 == counts[1] && 1 == counts[2] {
             HandRanking::OnePair
@@ -60,21 +66,21 @@ impl HandRanking {
     }
 }
 
-#[derive(PartialOrd, Ord, Eq, Debug, PartialEq, Clone)]
+#[derive(PartialOrd, Ord, Eq, Debug, PartialEq, Clone, Copy)]
 enum Card {
-    Two = 2,
-    Three = 3,
-    Four = 4,
-    Five = 5,
-    Six = 6,
-    Seven = 7,
-    Eight = 8,
-    Nine = 9,
-    Ten = 10,   // T
-    Jack = 11,  // J
-    Queen = 12, // Q
-    King = 13,  // K
-    Ace = 14,   // A
+    Jack = 0, // J
+    Two = 1,
+    Three = 2,
+    Four = 3,
+    Five = 4,
+    Six = 5,
+    Seven = 6,
+    Eight = 7,
+    Nine = 8,
+    Ten = 9,    // T
+    Queen = 10, // Q
+    King = 11,  // K
+    Ace = 12,   // A
 }
 
 impl Card {
@@ -247,7 +253,8 @@ mod tests {
         );
         // T55J5
         assert_eq!(
-            HandRanking::ThreeOfAKind,
+            // HandRanking::ThreeOfAKind,
+            HandRanking::FourOfAKind,
             HandRanking::from_cards(vec![
                 Card::Ten,
                 Card::Five,
@@ -264,12 +271,34 @@ mod tests {
         assert_eq!(
             Hand {
                 cards: vec![Card::Ten, Card::Five, Card::Five, Card::Jack, Card::Five,],
-                rank: HandRanking::ThreeOfAKind,
+                // rank: HandRanking::ThreeOfAKind,
+                rank: HandRanking::FourOfAKind,
                 bid: 684,
             },
             Hand::new_from_str("T55J5 684")
         )
     }
+
+    // #[test]
+    // fn hands_can_be_properly_sorted() {
+    //     let mut input = vec![
+    //         Hand::new_from_str("32T3K 765"),
+    //         Hand::new_from_str("T55J5 684"),
+    //         Hand::new_from_str("KK677 28"),
+    //         Hand::new_from_str("KTJJT 220"),
+    //         Hand::new_from_str("QQQJA 483"),
+    //     ];
+    //     let output = vec![
+    //         Hand::new_from_str("QQQJA 483"),
+    //         Hand::new_from_str("T55J5 684"),
+    //         Hand::new_from_str("KK677 28"),
+    //         Hand::new_from_str("KTJJT 220"),
+    //         Hand::new_from_str("32T3K 765"),
+    //     ];
+    //     assert_ne!(input, output);
+    //     input.sort();
+    //     assert_eq!(input, output);
+    // }
 
     #[test]
     fn hands_can_be_properly_sorted() {
@@ -281,10 +310,10 @@ mod tests {
             Hand::new_from_str("QQQJA 483"),
         ];
         let output = vec![
+            Hand::new_from_str("KTJJT 220"),
             Hand::new_from_str("QQQJA 483"),
             Hand::new_from_str("T55J5 684"),
             Hand::new_from_str("KK677 28"),
-            Hand::new_from_str("KTJJT 220"),
             Hand::new_from_str("32T3K 765"),
         ];
         assert_ne!(input, output);
@@ -292,10 +321,26 @@ mod tests {
         assert_eq!(input, output);
     }
 
+    // #[test]
+    // fn solves_part1() {
+    //     assert_eq!(
+    //         6440,
+    //         part1(
+    //             "32T3K 765
+    //             T55J5 684
+    //             KK677 28
+    //             KTJJT 220
+    //             QQQJA 483
+    //             "
+    //             .to_string()
+    //         )
+    //     );
+    // }
+
     #[test]
-    fn solves_part1() {
+    fn solves_part2() {
         assert_eq!(
-            6440,
+            5905,
             part1(
                 "32T3K 765
                 T55J5 684
