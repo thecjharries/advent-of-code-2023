@@ -102,12 +102,15 @@ impl Card {
 struct Hand {
     cards: Vec<Card>,
     rank: HandRanking,
+    bid: usize,
 }
 
 impl Hand {
     fn new_from_str(input: &str) -> Self {
+        let input = input.trim().to_uppercase();
+        let parts = input.split(' ').collect::<Vec<&str>>();
         let mut cards = Vec::new();
-        for character in input.chars() {
+        for character in parts[0].chars() {
             if let Some(card) = Card::from_char(character) {
                 cards.push(card);
             }
@@ -115,6 +118,7 @@ impl Hand {
         Hand {
             cards: cards.clone(),
             rank: HandRanking::from_cards(cards),
+            bid: parts[1].parse::<usize>().unwrap_or(0),
         }
     }
 }
@@ -235,8 +239,9 @@ mod tests {
             Hand {
                 cards: vec![Card::Ten, Card::Five, Card::Five, Card::Jack, Card::Five,],
                 rank: HandRanking::ThreeOfAKind,
+                bid: 684,
             },
-            Hand::new_from_str("T55J5")
+            Hand::new_from_str("T55J5 684")
         )
     }
 }
