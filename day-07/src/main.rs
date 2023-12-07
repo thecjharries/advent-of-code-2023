@@ -112,6 +112,7 @@ struct Hand {
 }
 
 impl PartialOrd for Hand {
+    #[cfg(not(tarpaulin_include))]
     fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
         if self.rank == other.rank {
             for index in 0..self.cards.len() {
@@ -159,6 +160,7 @@ fn part1(input: String) -> usize {
     sum
 }
 
+#[cfg(not(tarpaulin_include))]
 fn part2(input: String) -> usize {
     todo!()
 }
