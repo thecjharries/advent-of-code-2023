@@ -231,6 +231,11 @@ mod tests {
     }
 
     #[test]
+    fn gcd_returns_equality() {
+        assert_eq!(gcd(1, 1), 1);
+    }
+
+    #[test]
     fn solves_part2() {
         assert_eq!(
             6,
