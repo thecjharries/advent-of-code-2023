@@ -21,6 +21,22 @@ fn main() {
     println!("Part 2: {}", part2(input));
 }
 
+#[derive(Debug, PartialEq, Eq)]
+enum Direction {
+    Left,
+    Right,
+}
+
+impl Direction {
+    fn from_char(character: char) -> Self {
+        match character.to_ascii_uppercase() {
+            'L' => Self::Left,
+            'R' => Self::Right,
+            _ => panic!("Invalid direction character"),
+        }
+    }
+}
+
 fn part1(input: String) -> usize {
     todo!()
 }
@@ -33,4 +49,20 @@ fn part2(input: String) -> usize {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    #[should_panic]
+    fn direction_from_char_panics_on_invalid_character() {
+        Direction::from_char('X');
+    }
+
+    #[test]
+    fn direction_from_char_returns_left_on_l() {
+        assert_eq!(Direction::from_char('L'), Direction::Left);
+    }
+
+    #[test]
+    fn direction_from_char_returns_right_on_r() {
+        assert_eq!(Direction::from_char('R'), Direction::Right);
+    }
 }
