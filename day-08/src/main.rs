@@ -22,7 +22,7 @@ fn main() {
     println!("Part 2: {}", part2(input));
 }
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]
 enum Direction {
     Left,
     Right,
@@ -39,7 +39,22 @@ impl Direction {
 }
 
 fn parse_map(input: &str) -> BTreeMap<String, BTreeMap<Direction, String>> {
-    todo!()
+    let input = input.trim().replace(" ", "");
+    let mut map = BTreeMap::new();
+    for line in input.lines() {
+        let mut split = line.split("=");
+        let key = split.next().unwrap();
+        let value = split
+            .next()
+            .unwrap()
+            .trim_matches(|character| character == '(' || character == ')');
+        let mut directions = BTreeMap::new();
+        let mut values = value.split(',');
+        directions.insert(Direction::Left, values.next().unwrap().to_string());
+        directions.insert(Direction::Right, values.next().unwrap().to_string());
+        map.insert(key.to_string(), directions);
+    }
+    map
 }
 
 fn part1(input: String) -> usize {
