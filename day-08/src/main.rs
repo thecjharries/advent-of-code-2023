@@ -83,8 +83,54 @@ fn part1(input: String) -> usize {
     steps
 }
 
+fn gcd(mut a: usize, mut b: usize) -> usize {
+    if a == b {
+        return a;
+    }
+    if b > a {
+        let temp = a;
+        a = b;
+        b = temp;
+    }
+    while b != 0 {
+        let temp = b;
+        b = a % b;
+        a = temp;
+    }
+    a
+}
+
+fn lcm(a: usize, b: usize) -> usize {
+    a * b / gcd(a, b)
+}
+
 fn part2(input: String) -> usize {
-    todo!()
+    let input = input.trim();
+    let parts = input.split("\n\n").collect::<Vec<&str>>();
+    let directions = parse_directions(parts[0]);
+    let map = parse_map(parts[1]);
+    let mut index = 0;
+    let mut steps = 0;
+    let mut paths = Vec::new();
+    for (key, _) in map.iter() {
+        if key.ends_with('A') {
+            paths.push(key.to_string());
+        }
+    }
+    let mut cycle_lengths = Vec::new();
+    for path in paths {
+        let mut current = path;
+        while !current.ends_with('Z') {
+            let direction = &directions[index];
+            let next = map.get(&current).unwrap().get(&direction).unwrap();
+            current = next.to_string();
+            index = (index + 1) % directions.len();
+            steps += 1;
+        }
+        cycle_lengths.push(steps);
+        steps = 0;
+    }
+    cycle_lengths.iter().fold(1, |acc, x| lcm(acc, *x))
 }
 
 #[cfg(not(tarpaulin_include))]
