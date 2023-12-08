@@ -57,6 +57,14 @@ fn parse_map(input: &str) -> BTreeMap<String, BTreeMap<Direction, String>> {
     map
 }
 
+fn parse_directions(input: &str) -> Vec<Direction> {
+    let input = input.trim();
+    input
+        .chars()
+        .map(Direction::from_char)
+        .collect::<Vec<Direction>>()
+}
+
 fn part1(input: String) -> usize {
     todo!()
 }
@@ -121,5 +129,12 @@ mod tests {
             .collect(),
         );
         assert_eq!(parse_map(&input), expected);
+    }
+
+    #[test]
+    fn parse_directions_returns_expected_directions() {
+        let input = "LRL".to_string();
+        let expected = vec![Direction::Left, Direction::Right, Direction::Left];
+        assert_eq!(parse_directions(&input), expected);
     }
 }
