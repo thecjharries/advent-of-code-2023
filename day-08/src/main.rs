@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use std::collections::BTreeMap;
 use std::fs::read_to_string;
 
 #[cfg(not(tarpaulin_include))]
@@ -35,6 +36,10 @@ impl Direction {
             _ => panic!("Invalid direction character"),
         }
     }
+}
+
+fn parse_map(input: &str) -> BTreeMap<String, BTreeMap<Direction, String>> {
+    todo!()
 }
 
 fn part1(input: String) -> usize {
@@ -64,5 +69,42 @@ mod tests {
     #[test]
     fn direction_from_char_returns_right_on_r() {
         assert_eq!(Direction::from_char('R'), Direction::Right);
+    }
+
+    #[test]
+    fn parse_map_returns_expected_map() {
+        let input = "AAA = (BBB, BBB)
+        BBB = (AAA, ZZZ)
+        ZZZ = (ZZZ, ZZZ)"
+            .to_string();
+        let mut expected = BTreeMap::new();
+        expected.insert(
+            "AAA".to_string(),
+            vec![
+                (Direction::Left, "BBB".to_string()),
+                (Direction::Right, "BBB".to_string()),
+            ]
+            .into_iter()
+            .collect(),
+        );
+        expected.insert(
+            "BBB".to_string(),
+            vec![
+                (Direction::Left, "AAA".to_string()),
+                (Direction::Right, "ZZZ".to_string()),
+            ]
+            .into_iter()
+            .collect(),
+        );
+        expected.insert(
+            "ZZZ".to_string(),
+            vec![
+                (Direction::Left, "ZZZ".to_string()),
+                (Direction::Right, "ZZZ".to_string()),
+            ]
+            .into_iter()
+            .collect(),
+        );
+        assert_eq!(parse_map(&input), expected);
     }
 }
