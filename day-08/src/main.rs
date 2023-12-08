@@ -66,7 +66,21 @@ fn parse_directions(input: &str) -> Vec<Direction> {
 }
 
 fn part1(input: String) -> usize {
-    todo!()
+    let input = input.trim();
+    let parts = input.split("\n\n").collect::<Vec<&str>>();
+    let directions = parse_directions(parts[0]);
+    let map = parse_map(parts[1]);
+    let mut current = "AAA".to_string();
+    let mut index = 0;
+    let mut steps = 0;
+    while "ZZZ" != current {
+        let direction = &directions[index];
+        let next = map.get(&current).unwrap().get(&direction).unwrap();
+        current = next.to_string();
+        index = (index + 1) % directions.len();
+        steps += 1;
+    }
+    steps
 }
 
 fn part2(input: String) -> usize {
@@ -152,9 +166,10 @@ mod tests {
                 EEE = (EEE, EEE)
                 GGG = (GGG, GGG)
                 ZZZ = (ZZZ, ZZZ)
-                ".to_string()
+                "
+                .to_string()
             )
-        )
+        );
         assert_eq!(
             6,
             part1(
