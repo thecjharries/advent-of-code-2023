@@ -137,4 +137,35 @@ mod tests {
         let expected = vec![Direction::Left, Direction::Right, Direction::Left];
         assert_eq!(parse_directions(&input), expected);
     }
+
+    #[test]
+    fn solves_part1() {
+        assert_eq!(
+            2,
+            part1(
+                "RL
+
+                AAA = (BBB, CCC)
+                BBB = (DDD, EEE)
+                CCC = (ZZZ, GGG)
+                DDD = (DDD, DDD)
+                EEE = (EEE, EEE)
+                GGG = (GGG, GGG)
+                ZZZ = (ZZZ, ZZZ)
+                ".to_string()
+            )
+        )
+        assert_eq!(
+            6,
+            part1(
+                "LLR
+
+                AAA = (BBB, BBB)
+                BBB = (AAA, ZZZ)
+                ZZZ = (ZZZ, ZZZ)
+                "
+                .to_string()
+            )
+        );
+    }
 }
