@@ -134,11 +134,13 @@ fn find_longest_steps(
     steps
 }
 
+#[cfg(not(tarpaulin_include))]
 fn part1(input: String) -> usize {
     let (grid, start) = parse_grid(&input);
     find_longest_steps(grid, start, SymbolType::HorizontalPipe)
 }
 
+#[cfg(not(tarpaulin_include))]
 fn part2(input: String) -> usize {
     let (grid, start) = parse_grid(&input);
     let mut grid = grid.clone();
