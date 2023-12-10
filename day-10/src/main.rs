@@ -69,6 +69,19 @@ impl SymbolType {
             _ => None,
         }
     }
+
+    fn get_neighbors(&self) -> Vec<(i32, i32)> {
+        match self {
+            Self::VerticalPipe => vec![(-1, 0), (1, 0)],
+            Self::HorizontalPipe => vec![(0, -1), (0, 1)],
+            Self::EllBend => vec![(-1, 0), (0, 1)],
+            Self::JayBend => vec![(0, -1), (1, 0)],
+            Self::SevenBend => vec![(0, -1), (-1, 0)],
+            Self::FBend => vec![(0, 1), (1, 0)],
+            Self::Ground => vec![],
+            Self::Start => vec![],
+        }
+    }
 }
 
 fn part1(input: String) -> usize {
@@ -122,5 +135,29 @@ mod tests {
         assert_eq!(Some(SymbolType::Ground), SymbolType::from_char('.'));
         assert_eq!(Some(SymbolType::Start), SymbolType::from_char('S'));
         assert_eq!(None, SymbolType::from_char('x'));
+    }
+
+    #[test]
+    fn can_get_neighbors() {
+        assert_eq!(
+            vec![(-1, 0), (1, 0)],
+            SymbolType::VerticalPipe.get_neighbors()
+        );
+        assert_eq!(
+            vec![(0, -1), (0, 1)],
+            SymbolType::HorizontalPipe.get_neighbors()
+        );
+        assert_eq!(vec![(-1, 0), (0, 1)], SymbolType::EllBend.get_neighbors());
+        assert_eq!(vec![(0, -1), (1, 0)], SymbolType::JayBend.get_neighbors());
+        assert_eq!(
+            vec![(0, -1), (-1, 0)],
+            SymbolType::SevenBend.get_neighbors()
+        );
+        assert_eq!(vec![(0, 1), (1, 0)], SymbolType::FBend.get_neighbors());
+        assert_eq!(
+            vec![] as Vec<(i32, i32)>,
+            SymbolType::Ground.get_neighbors()
+        );
+        assert_eq!(vec![] as Vec<(i32, i32)>, SymbolType::Start.get_neighbors());
     }
 }
