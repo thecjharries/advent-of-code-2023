@@ -70,7 +70,17 @@ fn find_previous_value(sequence: Vec<i64>) -> i64 {
 }
 
 fn part2(input: String) -> i64 {
-    todo!()
+    let input = input.trim();
+    input
+        .lines()
+        .map(|line| {
+            find_previous_value(
+                line.split_whitespace()
+                    .map(|word| word.parse::<i64>().unwrap())
+                    .collect::<Vec<i64>>(),
+            )
+        })
+        .sum()
 }
 
 #[cfg(not(tarpaulin_include))]
@@ -122,5 +132,19 @@ mod tests {
         assert_eq!(0, find_previous_value(vec![1, 3, 6, 10, 15, 21]));
         // 10 13 16 21 30 45
         assert_eq!(5, find_previous_value(vec![10, 13, 16, 21, 30, 45]));
+    }
+
+    #[test]
+    fn solves_part2() {
+        assert_eq!(
+            2,
+            part2(
+                "0 3 6 9 12 15
+                1 3 6 10 15 21
+                10 13 16 21 30 45
+                "
+                .to_string()
+            )
+        );
     }
 }
