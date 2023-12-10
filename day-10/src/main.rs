@@ -21,6 +21,17 @@ fn main() {
     println!("Part 2: {}", part2(input));
 }
 
+fn parse_grid(input: &str) -> Vec<Vec<char>> {
+    let input = input.trim();
+    input
+        .lines()
+        .map(|line| {
+            let line = line.trim();
+            line.chars().collect::<Vec<char>>()
+        })
+        .collect::<Vec<Vec<char>>>()
+}
+
 fn part1(input: String) -> usize {
     todo!()
 }
@@ -33,4 +44,31 @@ fn part2(input: String) -> usize {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn can_parse_input_into_grid() {
+        // -L|F7
+        // 7S-7|
+        // L|7||
+        // -L-J|
+        // L|-JF
+        let output = vec![
+            vec!['-', 'L', '|', 'F', '7'],
+            vec!['7', 'S', '-', '7', '|'],
+            vec!['L', '|', '7', '|', '|'],
+            vec!['-', 'L', '-', 'J', '|'],
+            vec!['L', '|', '-', 'J', 'F'],
+        ];
+        assert_eq!(
+            output,
+            parse_grid(
+                "-L|F7
+            7S-7|
+            L|7||
+            -L-J|
+            L|-JF
+            "
+            )
+        );
+    }
 }
