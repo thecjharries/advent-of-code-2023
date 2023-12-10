@@ -62,6 +62,13 @@ fn part1(input: String) -> i64 {
         .sum()
 }
 
+fn find_previous_value(sequence: Vec<i64>) -> i64 {
+    let reductions = find_sequence_reductions(sequence);
+    reductions
+        .iter()
+        .fold(0, |acc, reduction| reduction[0] - acc)
+}
+
 fn part2(input: String) -> i64 {
     todo!()
 }
@@ -105,5 +112,15 @@ mod tests {
                 .to_string()
             )
         );
+    }
+
+    #[test]
+    fn test_find_previous_value() {
+        // 0 3 6 9 12 15
+        assert_eq!(-3, find_previous_value(vec![0, 3, 6, 9, 12, 15]));
+        // // 1 3 6 10 15 21
+        assert_eq!(0, find_previous_value(vec![1, 3, 6, 10, 15, 21]));
+        // 10 13 16 21 30 45
+        assert_eq!(5, find_previous_value(vec![10, 13, 16, 21, 30, 45]));
     }
 }
