@@ -21,15 +21,26 @@ fn main() {
     println!("Part 2: {}", part2(input));
 }
 
-fn parse_grid(input: &str) -> Vec<Vec<char>> {
+fn parse_grid(input: &str) -> (Vec<Vec<char>>, (usize, usize)) {
     let input = input.trim();
-    input
+    let mut row_index = 0;
+    let mut start = (0, 0);
+    let grid = input
         .lines()
         .map(|line| {
             let line = line.trim();
-            line.chars().collect::<Vec<char>>()
+            let mut row = Vec::new();
+            for (index, character) in line.chars().enumerate() {
+                if character == 'S' {
+                    start = (row_index, index);
+                }
+                row.push(character);
+            }
+            row_index += 1;
+            row
         })
-        .collect::<Vec<Vec<char>>>()
+        .collect::<Vec<Vec<char>>>();
+    (grid, start)
 }
 
 fn part1(input: String) -> usize {
@@ -60,7 +71,7 @@ mod tests {
             vec!['L', '|', '-', 'J', 'F'],
         ];
         assert_eq!(
-            output,
+            (output, (1, 1)),
             parse_grid(
                 "-L|F7
             7S-7|
