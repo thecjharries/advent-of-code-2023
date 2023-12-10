@@ -135,11 +135,82 @@ fn find_longest_steps(
 }
 
 fn part1(input: String) -> usize {
-    todo!()
+    let (grid, start) = parse_grid(&input);
+    find_longest_steps(grid, start, SymbolType::HorizontalPipe)
 }
 
 fn part2(input: String) -> usize {
-    todo!()
+    let (grid, start) = parse_grid(&input);
+    let mut grid = grid.clone();
+    grid[start.0][start.1] = '-';
+    let mut in_loop = HashSet::new();
+    let mut path = vec![start];
+    while !path.is_empty() {
+        let current = path.pop().unwrap();
+        let current_symbol = SymbolType::from_char(grid[current.0][current.1]).unwrap();
+        let neighbors = current_symbol.get_neighbors();
+        for neighbor in neighbors {
+            let neighbor = (
+                (current.0 as i32 + neighbor.0) as usize,
+                (current.1 as i32 + neighbor.1) as usize,
+            );
+            if !in_loop.contains(&neighbor) {
+                in_loop.insert(neighbor);
+                path.push(neighbor);
+            }
+        }
+    }
+    let mut inside_count = 0;
+    for row_index in 0..grid.len() {
+        for column_index in 0..grid[row_index].len() {
+            if in_loop.contains(&(row_index, column_index)) {
+                continue;
+            }
+            let mut hit_loop = 0;
+            for index in 0..=row_index {
+                let current = (row_index - index, column_index);
+                if in_loop.contains(&current) {
+                    hit_loop += 1;
+                }
+            }
+            if 0 == hit_loop % 2 {
+                continue;
+            }
+            let mut hit_loop = 0;
+            for index in 0..=column_index {
+                let current = (row_index, column_index - index);
+                if in_loop.contains(&current) {
+                    hit_loop += 1;
+                }
+            }
+            if 0 == hit_loop % 2 {
+                continue;
+            }
+            let mut hit_loop = 0;
+            for index in 0..=(grid.len() - row_index) {
+                let current = (row_index + index, column_index);
+                if in_loop.contains(&current) {
+                    hit_loop += 1;
+                }
+            }
+            if 0 == hit_loop % 2 {
+                continue;
+            }
+            let mut hit_loop = 0;
+            for index in 0..=(grid[row_index].len() - column_index) {
+                let current = (row_index, column_index + index);
+                if in_loop.contains(&current) {
+                    hit_loop += 1;
+                }
+            }
+            if 0 == hit_loop % 2 {
+                continue;
+            }
+            println!("{} {}", row_index, column_index);
+            inside_count += 1;
+        }
+    }
+    inside_count
 }
 
 #[cfg(not(tarpaulin_include))]
@@ -229,5 +300,75 @@ mod tests {
         );
         assert_eq!((2, 0), start);
         assert_eq!(8, find_longest_steps(grid, start, SymbolType::EffBend));
+    }
+
+    #[test]
+    fn solves_part2() {
+        assert_eq!(
+            4,
+            part2(
+                "...........
+                .S-------7.
+                .|F-----7|.
+                .||OOOOO||.
+                .||OOOOO||.
+                .|L-7OF-J|.
+                .|II|O|II|.
+                .L--JOL--J.
+                .....O.....
+                "
+                .to_string()
+            )
+        );
+        assert_eq!(
+            4,
+            part2(
+                "..........
+                .S------7.
+                .|F----7|.
+                .||OOOO||.
+                .||OOOO||.
+                .|L-7F-J|.
+                .|II||II|.
+                .L--JL--J.
+                ..........
+                "
+                .to_string()
+            )
+        );
+        assert_eq!(
+            8,
+            part2(
+                ".F----7F7F7F7F-7....
+                .|F--7||||||||FJ....
+                .||.FJ||||||||L7....
+                FJL7L7LJLJ||LJ.L-7..
+                L--J.L7...LJS7F-7L7.
+                ....F-J..F7FJ|L7L7L7
+                ....L7.F7||L7|.L7L7|
+                .....|FJLJ|FJ|F7|.LJ
+                ....FJL-7.||.||||...
+                ....L---J.LJ.LJLJ...
+                "
+                .to_string()
+            )
+        );
+        assert_eq!(
+            10,
+            part2(
+                "FF7FSF7F7F7F7F7F---7
+                L|LJ||||||||||||F--J
+                FL-7LJLJ||||||LJL-77
+                F--JF--7||LJLJ7F7FJ-
+                L---JF-JLJ.||-FJLJJ7
+                |F|F-JF---7F7-L7L|7|
+                |FFJF7L7F-JF7|JL---7
+                7-L-JL7||F7|L7F-7F7|
+                L.L7LFJ|||||FJL7||LJ
+                L7JLJL-JLJLJL--JLJ.L
+                "
+                .to_string()
+            )
+        );
     }
 }
