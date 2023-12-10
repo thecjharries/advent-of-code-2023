@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use std::collections::HashSet;
 use std::fs::read_to_string;
 
 #[cfg(not(tarpaulin_include))]
@@ -43,14 +44,14 @@ fn parse_grid(input: &str) -> (Vec<Vec<char>>, (usize, usize)) {
     (grid, start)
 }
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq, Copy, Clone)]
 enum SymbolType {
     VerticalPipe,
     HorizontalPipe,
     EllBend,
     JayBend,
     SevenBend,
-    FBend,
+    EffBend,
     Ground,
     Start,
 }
@@ -63,7 +64,7 @@ impl SymbolType {
             'L' => Some(Self::EllBend),
             'J' => Some(Self::JayBend),
             '7' => Some(Self::SevenBend),
-            'F' => Some(Self::FBend),
+            'F' => Some(Self::EffBend),
             'S' => Some(Self::Start),
             '.' => Some(Self::Ground),
             _ => None,
@@ -75,13 +76,62 @@ impl SymbolType {
             Self::VerticalPipe => vec![(-1, 0), (1, 0)],
             Self::HorizontalPipe => vec![(0, -1), (0, 1)],
             Self::EllBend => vec![(-1, 0), (0, 1)],
-            Self::JayBend => vec![(0, -1), (1, 0)],
-            Self::SevenBend => vec![(0, -1), (-1, 0)],
-            Self::FBend => vec![(0, 1), (1, 0)],
+            Self::JayBend => vec![(0, -1), (-1, 0)],
+            Self::SevenBend => vec![(0, -1), (1, 0)],
+            Self::EffBend => vec![(0, 1), (1, 0)],
             Self::Ground => vec![],
             Self::Start => vec![],
         }
     }
+}
+
+fn find_longest_steps(
+    grid: Vec<Vec<char>>,
+    start: (usize, usize),
+    inferred_symbol: SymbolType,
+) -> usize {
+    let mut visited = HashSet::new();
+    visited.insert(start);
+    let mut neighbors = inferred_symbol.get_neighbors();
+    let mut first_path = (
+        (start.0 as i32 + neighbors[0].0) as usize,
+        (start.1 as i32 + neighbors[0].1) as usize,
+    );
+    let mut second_path = (
+        (start.0 as i32 + neighbors[1].0) as usize,
+        (start.1 as i32 + neighbors[1].1) as usize,
+    );
+    let mut steps = 0;
+    while !visited.contains(&first_path) && !visited.contains(&second_path) {
+        visited.insert(first_path);
+        visited.insert(second_path);
+        let first_symbol = SymbolType::from_char(grid[first_path.0][first_path.1]).unwrap();
+        let second_symbol = SymbolType::from_char(grid[second_path.0][second_path.1]).unwrap();
+        neighbors = first_symbol.get_neighbors();
+        for neighbor in neighbors {
+            let neighbor = (
+                (first_path.0 as i32 + neighbor.0) as usize,
+                (first_path.1 as i32 + neighbor.1) as usize,
+            );
+            if !visited.contains(&neighbor) {
+                first_path = neighbor;
+                break;
+            }
+        }
+        neighbors = second_symbol.get_neighbors();
+        for neighbor in neighbors {
+            let neighbor = (
+                (second_path.0 as i32 + neighbor.0) as usize,
+                (second_path.1 as i32 + neighbor.1) as usize,
+            );
+            if !visited.contains(&neighbor) {
+                second_path = neighbor;
+                break;
+            }
+        }
+        steps += 1;
+    }
+    steps
 }
 
 fn part1(input: String) -> usize {
@@ -131,7 +181,7 @@ mod tests {
         assert_eq!(Some(SymbolType::EllBend), SymbolType::from_char('L'));
         assert_eq!(Some(SymbolType::JayBend), SymbolType::from_char('J'));
         assert_eq!(Some(SymbolType::SevenBend), SymbolType::from_char('7'));
-        assert_eq!(Some(SymbolType::FBend), SymbolType::from_char('F'));
+        assert_eq!(Some(SymbolType::EffBend), SymbolType::from_char('F'));
         assert_eq!(Some(SymbolType::Ground), SymbolType::from_char('.'));
         assert_eq!(Some(SymbolType::Start), SymbolType::from_char('S'));
         assert_eq!(None, SymbolType::from_char('x'));
@@ -148,16 +198,36 @@ mod tests {
             SymbolType::HorizontalPipe.get_neighbors()
         );
         assert_eq!(vec![(-1, 0), (0, 1)], SymbolType::EllBend.get_neighbors());
-        assert_eq!(vec![(0, -1), (1, 0)], SymbolType::JayBend.get_neighbors());
-        assert_eq!(
-            vec![(0, -1), (-1, 0)],
-            SymbolType::SevenBend.get_neighbors()
-        );
-        assert_eq!(vec![(0, 1), (1, 0)], SymbolType::FBend.get_neighbors());
+        assert_eq!(vec![(0, -1), (-1, 0)], SymbolType::JayBend.get_neighbors());
+        assert_eq!(vec![(0, -1), (1, 0)], SymbolType::SevenBend.get_neighbors());
+        assert_eq!(vec![(0, 1), (1, 0)], SymbolType::EffBend.get_neighbors());
         assert_eq!(
             vec![] as Vec<(i32, i32)>,
             SymbolType::Ground.get_neighbors()
         );
         assert_eq!(vec![] as Vec<(i32, i32)>, SymbolType::Start.get_neighbors());
+    }
+
+    #[test]
+    fn can_find_longest_steps() {
+        let (grid, start) = parse_grid(
+            "-L|F7
+        7S-7|
+        L|7||
+        -L-J|
+        L|-JF
+        ",
+        );
+        assert_eq!(4, find_longest_steps(grid, start, SymbolType::EffBend));
+        let (grid, start) = parse_grid(
+            "7-F7-
+            .FJ|7
+            SJLL7
+            |F--J
+            LJ.LJ
+            ",
+        );
+        assert_eq!((2, 0), start);
+        assert_eq!(8, find_longest_steps(grid, start, SymbolType::EffBend));
     }
 }
