@@ -21,7 +21,7 @@ fn main() {
     println!("Part 2: {}", part2(input));
 }
 
-fn find_next_value(sequence: Vec<i64>) -> i64 {
+fn find_sequence_reductions(sequence: Vec<i64>) -> Vec<Vec<i64>> {
     let mut reductions = vec![sequence.clone()];
     let mut has_nonzero_value = true;
     while has_nonzero_value {
@@ -38,6 +38,11 @@ fn find_next_value(sequence: Vec<i64>) -> i64 {
         reductions.push(new_sequence);
     }
     reductions.reverse();
+    reductions
+}
+
+fn find_next_value(sequence: Vec<i64>) -> i64 {
+    let reductions = find_sequence_reductions(sequence);
     reductions
         .iter()
         .fold(0, |acc, reduction| acc + reduction[reduction.len() - 1])
@@ -65,6 +70,18 @@ fn part2(input: String) -> i64 {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn properly_reduces_sequences() {
+        assert_eq!(
+            vec![
+                vec![0, 0, 0, 0],
+                vec![3, 3, 3, 3, 3],
+                vec![0, 3, 6, 9, 12, 15],
+            ],
+            find_sequence_reductions(vec![0, 3, 6, 9, 12, 15])
+        );
+    }
 
     #[test]
     fn test_find_next_value() {
