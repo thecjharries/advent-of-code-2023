@@ -43,6 +43,34 @@ fn parse_grid(input: &str) -> (Vec<Vec<char>>, (usize, usize)) {
     (grid, start)
 }
 
+#[derive(Debug, PartialEq, Eq)]
+enum SymbolType {
+    VerticalPipe,
+    HorizontalPipe,
+    EllBend,
+    JayBend,
+    SevenBend,
+    FBend,
+    Ground,
+    Start,
+}
+
+impl SymbolType {
+    fn from_char(character: char) -> Option<Self> {
+        match character {
+            '|' => Some(Self::VerticalPipe),
+            '-' => Some(Self::HorizontalPipe),
+            'L' => Some(Self::EllBend),
+            'J' => Some(Self::JayBend),
+            '7' => Some(Self::SevenBend),
+            'F' => Some(Self::FBend),
+            'S' => Some(Self::Start),
+            '.' => Some(Self::Ground),
+            _ => None,
+        }
+    }
+}
+
 fn part1(input: String) -> usize {
     todo!()
 }
@@ -81,5 +109,18 @@ mod tests {
             "
             )
         );
+    }
+
+    #[test]
+    fn can_parse_symbols() {
+        assert_eq!(Some(SymbolType::VerticalPipe), SymbolType::from_char('|'));
+        assert_eq!(Some(SymbolType::HorizontalPipe), SymbolType::from_char('-'));
+        assert_eq!(Some(SymbolType::EllBend), SymbolType::from_char('L'));
+        assert_eq!(Some(SymbolType::JayBend), SymbolType::from_char('J'));
+        assert_eq!(Some(SymbolType::SevenBend), SymbolType::from_char('7'));
+        assert_eq!(Some(SymbolType::FBend), SymbolType::from_char('F'));
+        assert_eq!(Some(SymbolType::Ground), SymbolType::from_char('.'));
+        assert_eq!(Some(SymbolType::Start), SymbolType::from_char('S'));
+        assert_eq!(None, SymbolType::from_char('x'));
     }
 }
