@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use std::collections::HashSet;
 use std::fs::read_to_string;
 
 #[cfg(not(tarpaulin_include))]
@@ -21,7 +22,7 @@ fn main() {
     println!("Part 2: {}", part2(input));
 }
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq, Clone, Copy)]
 enum Legend {
     Space,
     Galaxy,
@@ -35,6 +36,26 @@ impl Legend {
             _ => None,
         }
     }
+}
+
+fn parse_map(input: &str) -> (Vec<Vec<Legend>>, HashSet<(usize, usize)>) {
+    let input = input.trim();
+    let mut map = Vec::new();
+    let mut galaxies = HashSet::new();
+    for (y, line) in input.lines().enumerate() {
+        let line = line.trim();
+        let mut row = Vec::new();
+        for (x, character) in line.chars().enumerate() {
+            if let Some(legend) = Legend::from_char(character) {
+                row.push(legend);
+                if Legend::Galaxy == legend {
+                    galaxies.insert((x, y));
+                }
+            }
+        }
+        map.push(row);
+    }
+    (map, galaxies)
 }
 
 fn part1(input: String) -> usize {
@@ -55,5 +76,24 @@ mod tests {
         assert_eq!(Some(Legend::Space), Legend::from_char('.'));
         assert_eq!(Some(Legend::Galaxy), Legend::from_char('#'));
         assert_eq!(None, Legend::from_char('!'));
+    }
+
+    #[test]
+    fn map_parses_from_input() {
+        let output_map = vec![
+            vec![Legend::Galaxy, Legend::Space, Legend::Space],
+            vec![Legend::Space, Legend::Space, Legend::Space],
+            vec![Legend::Space, Legend::Space, Legend::Galaxy],
+        ];
+        let output_galaxies: HashSet<(usize, usize)> = vec![(0, 0), (2, 2)].into_iter().collect();
+        assert_eq!(
+            (output_map, output_galaxies),
+            parse_map(
+                "#..
+        ...
+        ..#
+        "
+            )
+        );
     }
 }
