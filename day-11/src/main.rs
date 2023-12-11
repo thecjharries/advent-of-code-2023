@@ -124,6 +124,7 @@ fn part1(input: String) -> usize {
         .sum()
 }
 
+#[cfg(not(tarpaulin_include))]
 fn part2(input: String) -> usize {
     todo!()
 }
