@@ -94,6 +94,20 @@ fn find_galaxies(galaxy: Vec<Vec<Legend>>) -> HashSet<(usize, usize)> {
     galaxies
 }
 
+fn find_shortest_manhattan_distance(first: (usize, usize), second: (usize, usize)) -> usize {
+    let x_distance = if first.0 > second.0 {
+        first.0 - second.0
+    } else {
+        second.0 - first.0
+    };
+    let y_distance = if first.1 > second.1 {
+        first.1 - second.1
+    } else {
+        second.1 - first.1
+    };
+    x_distance + y_distance
+}
+
 fn part1(input: String) -> usize {
     todo!()
 }
@@ -161,5 +175,11 @@ mod tests {
                 vec![Legend::Space, Legend::Space, Legend::Galaxy],
             ])
         );
+    }
+
+    #[test]
+    fn shortest_manhattan_distance_is_xy_sum() {
+        assert_eq!(15, find_shortest_manhattan_distance((0, 4), (10, 9)));
+        assert_eq!(17, find_shortest_manhattan_distance((2, 0), (7, 12)));
     }
 }
