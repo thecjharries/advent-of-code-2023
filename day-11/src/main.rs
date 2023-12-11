@@ -38,24 +38,48 @@ impl Legend {
     }
 }
 
-fn parse_map(input: &str) -> (Vec<Vec<Legend>>, HashSet<(usize, usize)>) {
+fn parse_map(input: &str) -> Vec<Vec<Legend>> {
     let input = input.trim();
     let mut map = Vec::new();
-    let mut galaxies = HashSet::new();
     for (y, line) in input.lines().enumerate() {
         let line = line.trim();
         let mut row = Vec::new();
         for (x, character) in line.chars().enumerate() {
             if let Some(legend) = Legend::from_char(character) {
                 row.push(legend);
-                if Legend::Galaxy == legend {
-                    galaxies.insert((x, y));
-                }
             }
         }
         map.push(row);
     }
-    (map, galaxies)
+    map
+}
+
+fn expand_galaxy(galaxy: Vec<Vec<Legend>>) -> Vec<Vec<Legend>> {
+    let mut expanded = Vec::new();
+    for row in galaxy.clone() {
+        let count = row.clone().iter().fold(0, |acc, legend| match legend {
+            Legend::Galaxy => acc + 1,
+            _ => acc,
+        });
+        if 0 == count {
+            expanded.push(row.clone());
+        }
+        expanded.push(row);
+    }
+    let mut column = 0;
+    while column < galaxy[0].len() {
+        let count = galaxy.clone().iter().fold(0, |acc, row| match row[column] {
+            Legend::Galaxy => acc + 1,
+            _ => acc,
+        });
+        if 0 == count {
+            for row in &mut expanded {
+                row.insert(column, Legend::Space);
+            }
+        }
+        column += 1;
+    }
+    expanded
 }
 
 fn part1(input: String) -> usize {
@@ -85,15 +109,32 @@ mod tests {
             vec![Legend::Space, Legend::Space, Legend::Space],
             vec![Legend::Space, Legend::Space, Legend::Galaxy],
         ];
-        let output_galaxies: HashSet<(usize, usize)> = vec![(0, 0), (2, 2)].into_iter().collect();
         assert_eq!(
-            (output_map, output_galaxies),
+            output_map,
             parse_map(
                 "#..
         ...
         ..#
         "
             )
+        );
+    }
+
+    #[test]
+    fn galaxy_expands_empty_rows_and_columns() {
+        let output_map = vec![
+            vec![Legend::Galaxy, Legend::Space, Legend::Space, Legend::Space],
+            vec![Legend::Space, Legend::Space, Legend::Space, Legend::Space],
+            vec![Legend::Space, Legend::Space, Legend::Space, Legend::Space],
+            vec![Legend::Space, Legend::Space, Legend::Space, Legend::Galaxy],
+        ];
+        assert_eq!(
+            output_map,
+            expand_galaxy(vec![
+                vec![Legend::Galaxy, Legend::Space, Legend::Space],
+                vec![Legend::Space, Legend::Space, Legend::Space],
+                vec![Legend::Space, Legend::Space, Legend::Galaxy],
+            ])
         );
     }
 }
