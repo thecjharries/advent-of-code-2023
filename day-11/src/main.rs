@@ -82,6 +82,18 @@ fn expand_galaxy(galaxy: Vec<Vec<Legend>>) -> Vec<Vec<Legend>> {
     expanded
 }
 
+fn find_galaxies(galaxy: Vec<Vec<Legend>>) -> HashSet<(usize, usize)> {
+    let mut galaxies = HashSet::new();
+    for (y, row) in galaxy.iter().enumerate() {
+        for (x, legend) in row.iter().enumerate() {
+            if Legend::Galaxy == *legend {
+                galaxies.insert((x, y));
+            }
+        }
+    }
+    galaxies
+}
+
 fn part1(input: String) -> usize {
     todo!()
 }
@@ -131,6 +143,19 @@ mod tests {
         assert_eq!(
             output_map,
             expand_galaxy(vec![
+                vec![Legend::Galaxy, Legend::Space, Legend::Space],
+                vec![Legend::Space, Legend::Space, Legend::Space],
+                vec![Legend::Space, Legend::Space, Legend::Galaxy],
+            ])
+        );
+    }
+
+    #[test]
+    fn can_find_all_galaxies() {
+        let galaxies: HashSet<(usize, usize)> = vec![(0, 0), (2, 2)].into_iter().collect();
+        assert_eq!(
+            galaxies,
+            find_galaxies(vec![
                 vec![Legend::Galaxy, Legend::Space, Legend::Space],
                 vec![Legend::Space, Legend::Space, Legend::Space],
                 vec![Legend::Space, Legend::Space, Legend::Galaxy],
