@@ -63,7 +63,9 @@ fn expand_galaxy(galaxy: Vec<Vec<Legend>>) -> Vec<Vec<Legend>> {
             _ => acc,
         });
         if 0 == count {
-            expanded.push(row.clone());
+            for _ in 0..1000000 {
+                expanded.push(row.clone());
+            }
         }
         expanded.push(row);
     }
@@ -78,7 +80,9 @@ fn expand_galaxy(galaxy: Vec<Vec<Legend>>) -> Vec<Vec<Legend>> {
             });
         if 0 == count {
             for row in final_map.iter_mut() {
-                row.push(Legend::Space);
+                for _ in 0..1000000 {
+                    row.push(Legend::Space);
+                }
             }
         }
         for (row_index, row) in expanded.iter().enumerate() {
