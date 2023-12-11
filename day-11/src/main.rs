@@ -21,6 +21,22 @@ fn main() {
     println!("Part 2: {}", part2(input));
 }
 
+#[derive(Debug, PartialEq, Eq)]
+enum Legend {
+    Space,
+    Galaxy,
+}
+
+impl Legend {
+    fn from_char(character: char) -> Option<Self> {
+        match character {
+            '.' => Some(Legend::Space),
+            '#' => Some(Legend::Galaxy),
+            _ => None,
+        }
+    }
+}
+
 fn part1(input: String) -> usize {
     todo!()
 }
@@ -33,4 +49,11 @@ fn part2(input: String) -> usize {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn legend_parses_from_chars() {
+        assert_eq!(Some(Legend::Space), Legend::from_char('.'));
+        assert_eq!(Some(Legend::Galaxy), Legend::from_char('#'));
+        assert_eq!(None, Legend::from_char('!'));
+    }
 }
