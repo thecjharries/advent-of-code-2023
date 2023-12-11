@@ -117,7 +117,6 @@ fn find_shortest_manhattan_distance(first: (usize, usize), second: (usize, usize
 fn part1(input: String) -> usize {
     let map = expand_galaxy(parse_map(&input));
     let galaxies = find_galaxies(map);
-    println!("{:?}", galaxies);
     galaxies
         .iter()
         .combinations(2)
@@ -206,7 +205,6 @@ mod tests {
         let expand_output = expand_galaxy(expand_input);
         for (y, row) in desired_expand_output.iter().enumerate() {
             for (x, legend) in row.iter().enumerate() {
-                println!("{} {}", x, y);
                 assert_eq!(desired_expand_output[y][x], expand_output[y][x]);
             }
         }
@@ -231,24 +229,24 @@ mod tests {
         assert_eq!(17, find_shortest_manhattan_distance((2, 0), (7, 12)));
     }
 
-    // #[test]
-    // fn solves_part1() {
-    //     assert_eq!(
-    //         374,
-    //         part1(
-    //             "...#......
-    //             .......#..
-    //             #.........
-    //             ..........
-    //             ......#...
-    //             .#........
-    //             .........#
-    //             ..........
-    //             .......#..
-    //             #...#.....
-    //             "
-    //             .to_string()
-    //         )
-    //     );
-    // }
+    #[test]
+    fn solves_part1() {
+        assert_eq!(
+            374,
+            part1(
+                "...#......
+                .......#..
+                #.........
+                ..........
+                ......#...
+                .#........
+                .........#
+                ..........
+                .......#..
+                #...#.....
+                "
+                .to_string()
+            )
+        );
+    }
 }
