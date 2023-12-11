@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use itertools::Itertools;
 use std::collections::HashSet;
 use std::fs::read_to_string;
 
@@ -66,20 +67,25 @@ fn expand_galaxy(galaxy: Vec<Vec<Legend>>) -> Vec<Vec<Legend>> {
         }
         expanded.push(row);
     }
-    let mut column = 0;
-    while column < galaxy[0].len() {
-        let count = galaxy.clone().iter().fold(0, |acc, row| match row[column] {
-            Legend::Galaxy => acc + 1,
-            _ => acc,
-        });
+    let mut final_map: Vec<Vec<Legend>> = vec![Vec::new(); expanded.len()];
+    for column in 0..expanded[0].len() {
+        let count = expanded
+            .clone()
+            .iter()
+            .fold(0, |acc, row| match row[column] {
+                Legend::Galaxy => acc + 1,
+                _ => acc,
+            });
         if 0 == count {
-            for row in &mut expanded {
-                row.insert(column, Legend::Space);
+            for row in final_map.iter_mut() {
+                row.push(Legend::Space);
             }
         }
-        column += 1;
+        for (row_index, row) in expanded.iter().enumerate() {
+            final_map[row_index].push(row[column]);
+        }
     }
-    expanded
+    final_map
 }
 
 fn find_galaxies(galaxy: Vec<Vec<Legend>>) -> HashSet<(usize, usize)> {
@@ -109,7 +115,14 @@ fn find_shortest_manhattan_distance(first: (usize, usize), second: (usize, usize
 }
 
 fn part1(input: String) -> usize {
-    todo!()
+    let map = expand_galaxy(parse_map(&input));
+    let galaxies = find_galaxies(map);
+    println!("{:?}", galaxies);
+    galaxies
+        .iter()
+        .combinations(2)
+        .map(|pair| find_shortest_manhattan_distance(*pair[0], *pair[1]))
+        .sum()
 }
 
 fn part2(input: String) -> usize {
@@ -162,6 +175,41 @@ mod tests {
                 vec![Legend::Space, Legend::Space, Legend::Galaxy],
             ])
         );
+        let expand_input = parse_map(
+            "...#......
+        .......#..
+        #.........
+        ..........
+        ......#...
+        .#........
+        .........#
+        ..........
+        .......#..
+        #...#.....
+        ",
+        );
+        let desired_expand_output = parse_map(
+            "....#........
+        .........#...
+        #............
+        .............
+        .............
+        ........#....
+        .#...........
+        ............#
+        .............
+        .............
+        .........#...
+        #....#.......
+        ",
+        );
+        let expand_output = expand_galaxy(expand_input);
+        for (y, row) in desired_expand_output.iter().enumerate() {
+            for (x, legend) in row.iter().enumerate() {
+                println!("{} {}", x, y);
+                assert_eq!(desired_expand_output[y][x], expand_output[y][x]);
+            }
+        }
     }
 
     #[test]
@@ -182,4 +230,25 @@ mod tests {
         assert_eq!(15, find_shortest_manhattan_distance((0, 4), (10, 9)));
         assert_eq!(17, find_shortest_manhattan_distance((2, 0), (7, 12)));
     }
+
+    // #[test]
+    // fn solves_part1() {
+    //     assert_eq!(
+    //         374,
+    //         part1(
+    //             "...#......
+    //             .......#..
+    //             #.........
+    //             ..........
+    //             ......#...
+    //             .#........
+    //             .........#
+    //             ..........
+    //             .......#..
+    //             #...#.....
+    //             "
+    //             .to_string()
+    //         )
+    //     );
+    // }
 }
