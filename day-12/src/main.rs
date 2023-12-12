@@ -21,6 +21,10 @@ fn main() {
     println!("Part 2: {}", part2(input));
 }
 
+fn part1_line(input: &str) -> usize {
+    todo!()
+}
+
 fn part1(input: String) -> usize {
     todo!()
 }
@@ -33,6 +37,58 @@ fn part2(input: String) -> usize {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn solves_part1_line() {
+        assert_eq!(
+            1,
+            part1_line(
+                "???.### 1,1,3
+                "
+                .to_string()
+            )
+        );
+        assert_eq!(
+            4,
+            part1_line(
+                ".??..??...?##. 1,1,3
+                "
+                .to_string()
+            )
+        );
+        assert_eq!(
+            1,
+            part1_line(
+                "?#?#?#?#?#?#?#? 1,3,1,6
+                "
+                .to_string()
+            )
+        );
+        assert_eq!(
+            1,
+            part1_line(
+                "????.#...#... 4,1,1
+                "
+                .to_string()
+            )
+        );
+        assert_eq!(
+            4,
+            part1_line(
+                "????.######..#####. 1,6,5
+                "
+                .to_string()
+            )
+        );
+        assert_eq!(
+            10,
+            part1_line(
+                "?###???????? 3,2,1
+                "
+                .to_string()
+            )
+        );
+    }
 
     #[test]
     fn solves_part1() {
