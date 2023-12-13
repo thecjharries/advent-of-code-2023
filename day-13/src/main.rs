@@ -33,6 +33,19 @@ fn transpose(input: Vec<Vec<char>>) -> Vec<Vec<char>> {
     output
 }
 
+fn compare_sides(first: Vec<Vec<char>>, second: Vec<Vec<char>>) -> bool {
+    let mut first = first;
+    let mut second = second;
+    if first.len() > second.len() {
+        first = first[first.len() - second.len()..].to_vec();
+    }
+    if second.len() > first.len() {
+        second = second[0..first.len()].to_vec();
+    }
+    second.reverse();
+    first == second
+}
+
 fn find_reflection(input: Vec<Vec<char>>) -> usize {
     todo!()
 }
@@ -80,6 +93,23 @@ mod tests {
             vec!['3', '6', '9', '#'],
         ];
         assert_eq!(expected, transpose(input));
+    }
+
+    #[test]
+    fn compare_sides_handles_different_sizes() {
+        assert!(compare_sides(
+            vec![
+                vec!['#', '.', '.', '.', '#', '#', '.', '.', '#'],
+                vec!['#', '.', '.', '.', '.', '#', '.', '.', '#'],
+                vec!['.', '.', '#', '#', '.', '.', '#', '#', '#'],
+                vec!['#', '#', '#', '#', '#', '.', '#', '#', '.'],
+            ],
+            vec![
+                vec!['#', '#', '#', '#', '#', '.', '#', '#', '.'],
+                vec!['.', '.', '#', '#', '.', '.', '#', '#', '#'],
+                vec!['#', '.', '.', '.', '.', '#', '.', '.', '#'],
+            ]
+        ));
     }
 
     #[test]
