@@ -24,6 +24,9 @@ fn main() {
 #[memoize::memoize]
 fn find_number_of_arrangements(entry: String, groups: Vec<usize>) -> usize {
     if groups.is_empty() {
+        if entry.contains('#') {
+            return 0;
+        }
         return 1;
     }
     if entry.len() < groups.iter().sum::<usize>() + groups.len() - 1 {
@@ -96,6 +99,11 @@ fn part2(input: String) -> usize {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_missing_case() {
+        assert_eq!(0, find_number_of_arrangements("#".to_string(), vec![]));
+    }
 
     #[test]
     fn solves_part1_line() {
