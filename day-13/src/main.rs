@@ -47,7 +47,12 @@ fn compare_sides(first: Vec<Vec<char>>, second: Vec<Vec<char>>) -> bool {
 }
 
 fn find_reflection(input: Vec<Vec<char>>) -> usize {
-    todo!()
+    for index in 1..input.len() {
+        if compare_sides(input[0..index].to_vec(), input[index..].to_vec()) {
+            return index;
+        }
+    }
+    0
 }
 
 fn parse_input_to_maps(input: &str) -> Vec<Vec<Vec<char>>> {
