@@ -33,6 +33,10 @@ fn transpose(input: Vec<Vec<char>>) -> Vec<Vec<char>> {
     output
 }
 
+fn find_reflection(input: Vec<Vec<char>>) -> usize {
+    todo!()
+}
+
 fn parse_input_to_maps(input: &str) -> Vec<Vec<Vec<char>>> {
     let input = input.trim();
     input
@@ -76,6 +80,30 @@ mod tests {
             vec!['3', '6', '9', '#'],
         ];
         assert_eq!(expected, transpose(input));
+    }
+
+    #[test]
+    fn can_find_reflection_lines_above() {
+        let input = vec![
+            vec!['#', '.', '.', '.', '#', '#', '.', '.', '#'],
+            vec!['#', '.', '.', '.', '.', '#', '.', '.', '#'],
+            vec!['.', '.', '#', '#', '.', '.', '#', '#', '#'],
+            vec!['#', '#', '#', '#', '#', '.', '#', '#', '.'],
+            vec!['#', '#', '#', '#', '#', '.', '#', '#', '.'],
+            vec!['.', '.', '#', '#', '.', '.', '#', '#', '#'],
+            vec!['#', '.', '.', '.', '.', '#', '.', '.', '#'],
+        ];
+        assert_eq!(4, find_reflection(input));
+        let input = transpose(vec![
+            vec!['#', '.', '#', '#', '.', '.', '#', '#', '.'],
+            vec!['.', '.', '#', '.', '#', '#', '.', '#', '.'],
+            vec!['#', '#', '.', '.', '.', '.', '.', '.', '#'],
+            vec!['#', '#', '.', '.', '.', '.', '.', '.', '#'],
+            vec!['.', '.', '#', '.', '#', '#', '.', '#', '.'],
+            vec!['.', '.', '#', '#', '.', '.', '#', '#', '.'],
+            vec!['#', '.', '#', '.', '#', '#', '.', '#', '.'],
+        ]);
+        assert_eq!(5, find_reflection(input));
     }
 
     #[test]
