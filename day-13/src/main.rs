@@ -49,6 +49,12 @@ fn compare_sides(first: Vec<Vec<char>>, second: Vec<Vec<char>>) -> bool {
 fn find_reflection(input: Vec<Vec<char>>) -> usize {
     for index in 1..input.len() {
         if compare_sides(input[0..index].to_vec(), input[index..].to_vec()) {
+            return 100 * index;
+        }
+    }
+    let input = transpose(input);
+    for index in 1..input.len() {
+        if compare_sides(input[0..index].to_vec(), input[index..].to_vec()) {
             return index;
         }
     }
@@ -72,7 +78,8 @@ fn parse_input_to_maps(input: &str) -> Vec<Vec<Vec<char>>> {
 }
 
 fn part1(input: String) -> usize {
-    todo!()
+    let maps = parse_input_to_maps(&input);
+    maps.iter().map(|map| find_reflection(map.clone())).sum()
 }
 
 fn part2(input: String) -> usize {
@@ -128,8 +135,8 @@ mod tests {
             vec!['.', '.', '#', '#', '.', '.', '#', '#', '#'],
             vec!['#', '.', '.', '.', '.', '#', '.', '.', '#'],
         ];
-        assert_eq!(4, find_reflection(input));
-        let input = transpose(vec![
+        assert_eq!(400, find_reflection(input));
+        let input = vec![
             vec!['#', '.', '#', '#', '.', '.', '#', '#', '.'],
             vec!['.', '.', '#', '.', '#', '#', '.', '#', '.'],
             vec!['#', '#', '.', '.', '.', '.', '.', '.', '#'],
@@ -137,7 +144,7 @@ mod tests {
             vec!['.', '.', '#', '.', '#', '#', '.', '#', '.'],
             vec!['.', '.', '#', '#', '.', '.', '#', '#', '.'],
             vec!['#', '.', '#', '.', '#', '#', '.', '#', '.'],
-        ]);
+        ];
         assert_eq!(5, find_reflection(input));
     }
 
