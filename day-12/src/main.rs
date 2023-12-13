@@ -75,7 +75,25 @@ fn part1(input: String) -> usize {
 }
 
 fn part2(input: String) -> usize {
-    todo!()
+    let input = input.trim();
+    input
+        .lines()
+        .map(|x| {
+            let x = x.trim();
+            let mut split = x.split(' ');
+            let entry = split.next().unwrap().to_string();
+            let entry = vec![entry; 5];
+            let entry = entry.join("?");
+            let groups = split.next().unwrap().to_string();
+            let groups = vec![groups; 5];
+            let groups = groups.join(",");
+            let groups = groups
+                .split(',')
+                .map(|x| x.parse::<usize>().unwrap())
+                .collect::<Vec<usize>>();
+            find_number_of_arrangements(entry.to_string(), groups)
+        })
+        .sum()
 }
 
 #[cfg(not(tarpaulin_include))]
