@@ -70,7 +70,8 @@ fn part1_line(input: &str) -> usize {
 }
 
 fn part1(input: String) -> usize {
-    todo!()
+    let input = input.trim();
+    input.lines().map(|x| part1_line(x)).sum()
 }
 
 fn part2(input: String) -> usize {
