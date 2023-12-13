@@ -21,6 +21,18 @@ fn main() {
     println!("Part 2: {}", part2(input));
 }
 
+fn transpose(input: Vec<Vec<char>>) -> Vec<Vec<char>> {
+    let mut output = Vec::new();
+    for column in 0..input[0].len() {
+        let mut row = Vec::new();
+        for row_index in 0..input.len() {
+            row.push(input[row_index][column]);
+        }
+        output.push(row);
+    }
+    output
+}
+
 fn part1(input: String) -> usize {
     todo!()
 }
@@ -33,4 +45,20 @@ fn part2(input: String) -> usize {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn transpose_works_as_expected() {
+        let input = vec![
+            vec!['1', '2', '3'],
+            vec!['4', '5', '6'],
+            vec!['7', '8', '9'],
+            vec!['*', '0', '#'],
+        ];
+        let expected = vec![
+            vec!['1', '4', '7', '*'],
+            vec!['2', '5', '8', '0'],
+            vec!['3', '6', '9', '#'],
+        ];
+        assert_eq!(expected, transpose(input));
+    }
 }
