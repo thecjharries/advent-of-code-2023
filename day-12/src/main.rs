@@ -24,11 +24,7 @@ fn main() {
 #[memoize::memoize]
 fn find_number_of_arrangements(entry: String, groups: Vec<usize>) -> usize {
     if groups.is_empty() {
-        if entry.contains('#') {
-            return 0;
-        } else {
-            return 1;
-        }
+        return 1;
     }
     if entry.len() < groups.iter().sum::<usize>() + groups.len() - 1 {
         return 0;
