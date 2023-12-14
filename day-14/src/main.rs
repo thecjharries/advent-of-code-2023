@@ -158,4 +158,25 @@ mod tests {
         ));
         assert_eq!(expected, tilt_transposed_north(input));
     }
+
+    #[test]
+    fn solves_part1() {
+        assert_eq!(
+            136,
+            part1(
+                "O....#....
+                O.OO#....#
+                .....##...
+                OO.#O....O
+                .O.....O#.
+                O.#..O.#.#
+                ..O..#O..O
+                .......O..
+                #....###..
+                #OO..#....
+                "
+                .to_string()
+            )
+        );
+    }
 }
