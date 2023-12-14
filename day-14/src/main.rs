@@ -33,6 +33,25 @@ fn transpose(input: Vec<Vec<char>>) -> Vec<Vec<char>> {
     output
 }
 
+fn tilt_transposed_north(input: Vec<Vec<char>>) -> Vec<Vec<char>> {
+    let mut output = Vec::new();
+    for row in input {
+        let mut first_free_space = 0;
+        let mut output_row = row.clone();
+        for (index, character) in row.iter().enumerate() {
+            if 'O' == *character {
+                output_row.swap(first_free_space, index);
+                first_free_space += 1;
+            }
+            if '#' == *character {
+                first_free_space = index + 1;
+            }
+        }
+        output.push(output_row);
+    }
+    output
+}
+
 fn parse_input_to_map(input: &str) -> Vec<Vec<char>> {
     let input = input.trim();
     input
@@ -109,5 +128,34 @@ mod tests {
             vec!['#', 'O', 'O', '.', '.', '#', '.', '.', '.', '.'],
         ];
         assert_eq!(expected, parse_input_to_map(input));
+    }
+
+    #[test]
+    fn can_tilt_transposed_maps() {
+        let input = transpose(parse_input_to_map(
+            "O....#....
+            O.OO#....#
+            .....##...
+            OO.#O....O
+            .O.....O#.
+            O.#..O.#.#
+            ..O..#O..O
+            .......O..
+            #....###..
+            #OO..#....",
+        ));
+        let expected = transpose(parse_input_to_map(
+            "OOOO.#.O..
+            OO..#....#
+            OO..O##..O
+            O..#.OO...
+            ........#.
+            ..#....#.#
+            ..O..#.O.O
+            ..O.......
+            #....###..
+            #....#....",
+        ));
+        assert_eq!(expected, tilt_transposed_north(input));
     }
 }
