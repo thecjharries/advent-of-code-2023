@@ -95,33 +95,18 @@ fn part1(input: String) -> usize {
         .sum()
 }
 
-fn print_map(map: Vec<Vec<char>>) {
-    for row in map {
-        for character in row {
-            print!("{}", character);
-        }
-        println!();
-    }
-    println!();
-}
-
 fn cycle_transposed_load_once(input: Vec<Vec<char>>) -> Vec<Vec<char>> {
-    print_map(input.clone());
     // North is North
     let output = tilt_transposed_north(input);
-    print_map(output.clone());
     let output = rotate_matrix_counter_clockwise(output);
     // West is North
     let output = tilt_transposed_north(output);
-    print_map(output.clone());
     let output = rotate_matrix_counter_clockwise(output);
     // South is North
     let output = tilt_transposed_north(output);
-    print_map(output.clone());
     let output = rotate_matrix_counter_clockwise(output);
     // East is North
     let output = tilt_transposed_north(output);
-    print_map(output.clone());
     let output = rotate_matrix_counter_clockwise(output);
     // North is North
     output
