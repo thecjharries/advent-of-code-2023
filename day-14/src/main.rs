@@ -95,6 +95,38 @@ fn part1(input: String) -> usize {
         .sum()
 }
 
+fn print_map(map: Vec<Vec<char>>) {
+    for row in map {
+        for character in row {
+            print!("{}", character);
+        }
+        println!();
+    }
+    println!();
+}
+
+fn cycle_transposed_load_once(input: Vec<Vec<char>>) -> Vec<Vec<char>> {
+    print_map(input.clone());
+    // North is North
+    let output = tilt_transposed_north(input);
+    print_map(output.clone());
+    let output = rotate_matrix_counter_clockwise(output);
+    // West is North
+    let output = tilt_transposed_north(output);
+    print_map(output.clone());
+    let output = rotate_matrix_counter_clockwise(output);
+    // South is North
+    let output = tilt_transposed_north(output);
+    print_map(output.clone());
+    let output = rotate_matrix_counter_clockwise(output);
+    // East is North
+    let output = tilt_transposed_north(output);
+    print_map(output.clone());
+    let output = rotate_matrix_counter_clockwise(output);
+    // North is North
+    output
+}
+
 fn part2(input: String) -> usize {
     todo!()
 }
@@ -240,6 +272,64 @@ mod tests {
                 .to_string()
             )
         );
+    }
+
+    #[test]
+    fn can_cycle_given_number_of_times() {
+        let input = transpose(parse_input_to_map(
+            "O....#....
+            O.OO#....#
+            .....##...
+            OO.#O....O
+            .O.....O#.
+            O.#..O.#.#
+            ..O..#O..O
+            .......O..
+            #....###..
+            #OO..#....",
+        ));
+        let expected = transpose(parse_input_to_map(
+            ".....#....
+        ....#...O#
+        ...OO##...
+        .OO#......
+        .....OOO#.
+        .O#...O#.#
+        ....O#....
+        ......OOOO
+        #...O###..
+        #..OO#....",
+        ));
+        let output = cycle_transposed_load_once(input);
+        assert_eq!(expected, output);
+        let expected = transpose(parse_input_to_map(
+            ".....#....
+        ....#...O#
+        .....##...
+        ..O#......
+        .....OOO#.
+        .O#...O#.#
+        ....O#...O
+        .......OOO
+        #..OO###..
+        #.OOO#...O",
+        ));
+        let output = cycle_transposed_load_once(output);
+        assert_eq!(expected, output);
+        let expected = transpose(parse_input_to_map(
+            ".....#....
+        ....#...O#
+        .....##...
+        ..O#......
+        .....OOO#.
+        .O#...O#.#
+        ....O#...O
+        .......OOO
+        #...O###.O
+        #.OOO#...O",
+        ));
+        let output = cycle_transposed_load_once(output);
+        assert_eq!(expected, output);
     }
 
     #[test]
