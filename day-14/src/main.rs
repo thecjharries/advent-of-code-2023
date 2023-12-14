@@ -78,7 +78,7 @@ fn parse_input_to_map(input: &str) -> Vec<Vec<char>> {
 
 fn part1(input: String) -> usize {
     let map = transpose(parse_input_to_map(&input));
-    let mut map = tilt_transposed_north(map);
+    let map = tilt_transposed_north(map);
     map.iter()
         .map(|row| {
             row.iter()
