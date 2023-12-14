@@ -64,7 +64,22 @@ fn parse_input_to_map(input: &str) -> Vec<Vec<char>> {
 }
 
 fn part1(input: String) -> usize {
-    todo!()
+    let map = transpose(parse_input_to_map(&input));
+    let mut map = tilt_transposed_north(map);
+    map.iter()
+        .map(|row| {
+            row.iter()
+                .enumerate()
+                .map(|(index, character)| {
+                    if 'O' == *character {
+                        row.len() - index
+                    } else {
+                        0
+                    }
+                })
+                .sum::<usize>()
+        })
+        .sum()
 }
 
 fn part2(input: String) -> usize {
