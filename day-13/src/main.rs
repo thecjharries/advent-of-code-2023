@@ -82,6 +82,7 @@ fn part1(input: String) -> usize {
     maps.iter().map(|map| find_reflection(map.clone())).sum()
 }
 
+#[cfg(not(tarpaulin_include))]
 fn part2(input: String) -> usize {
     todo!()
 }
