@@ -33,6 +33,17 @@ fn transpose(input: Vec<Vec<char>>) -> Vec<Vec<char>> {
     output
 }
 
+fn parse_input_to_map(input: &str) -> Vec<Vec<char>> {
+    let input = input.trim();
+    input
+        .split("\n")
+        .map(|line| {
+            let line = line.trim();
+            line.chars().collect()
+        })
+        .collect()
+}
+
 fn part1(input: String) -> usize {
     todo!()
 }
@@ -60,5 +71,43 @@ mod tests {
             vec!['3', '6', '9', '#'],
         ];
         assert_eq!(expected, transpose(input));
+    }
+
+    #[test]
+    fn can_parse_input_maps() {
+        let input = "O....#....
+        O.OO#....#
+        .....##...
+        OO.#O....O
+        .O.....O#.
+        O.#..O.#.#
+        ..O..#O..O
+        .......O..
+        #....###..
+        #OO..#....
+        ";
+        let expected = vec![
+            // O....#....
+            vec!['O', '.', '.', '.', '.', '#', '.', '.', '.', '.'],
+            // O.OO#....#
+            vec!['O', '.', 'O', 'O', '#', '.', '.', '.', '.', '#'],
+            // .....##...
+            vec!['.', '.', '.', '.', '.', '#', '#', '.', '.', '.'],
+            // OO.#O....O
+            vec!['O', 'O', '.', '#', 'O', '.', '.', '.', '.', 'O'],
+            // .O.....O#.
+            vec!['.', 'O', '.', '.', '.', '.', '.', 'O', '#', '.'],
+            // O.#..O.#.#
+            vec!['O', '.', '#', '.', '.', 'O', '.', '#', '.', '#'],
+            // ..O..#O..O
+            vec!['.', '.', 'O', '.', '.', '#', 'O', '.', '.', 'O'],
+            // .......O..
+            vec!['.', '.', '.', '.', '.', '.', '.', 'O', '.', '.'],
+            // #....###..
+            vec!['#', '.', '.', '.', '.', '#', '#', '#', '.', '.'],
+            // #OO..#....
+            vec!['#', 'O', 'O', '.', '.', '#', '.', '.', '.', '.'],
+        ];
+        assert_eq!(expected, parse_input_to_map(input));
     }
 }
