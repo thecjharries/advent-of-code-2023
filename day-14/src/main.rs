@@ -33,15 +33,16 @@ fn transpose(input: Vec<Vec<char>>) -> Vec<Vec<char>> {
     output
 }
 
-fn rotate_matrix_clockwise(input: Vec<Vec<char>>) -> Vec<Vec<char>> {
+fn rotate_matrix_counter_clockwise(input: Vec<Vec<char>>) -> Vec<Vec<char>> {
     let mut output = Vec::new();
     for column in 0..input[0].len() {
         let mut row = Vec::new();
-        for row_index in (0..input.len()).rev() {
+        for row_index in 0..input.len() {
             row.push(input[row_index][column]);
         }
         output.push(row);
     }
+    output.reverse();
     output
 }
 
@@ -120,7 +121,7 @@ mod tests {
     }
 
     #[test]
-    fn rotate_matrix_clockwise_works_as_expected() {
+    fn rotate_matrix_counter_clockwise_works_as_expected() {
         let input = vec![
             vec!['1', '2', '3'],
             vec!['4', '5', '6'],
@@ -128,11 +129,11 @@ mod tests {
             vec!['*', '0', '#'],
         ];
         let expected = vec![
-            vec!['*', '7', '4', '1'],
-            vec!['0', '8', '5', '2'],
-            vec!['#', '9', '6', '3'],
+            vec!['3', '6', '9', '#'],
+            vec!['2', '5', '8', '0'],
+            vec!['1', '4', '7', '*'],
         ];
-        let output = rotate_matrix_clockwise(input.clone());
+        let output = rotate_matrix_counter_clockwise(input.clone());
         assert_eq!(expected, output);
         let expected = vec![
             vec!['#', '0', '*'],
@@ -140,16 +141,16 @@ mod tests {
             vec!['6', '5', '4'],
             vec!['3', '2', '1'],
         ];
-        let output = rotate_matrix_clockwise(output);
+        let output = rotate_matrix_counter_clockwise(output);
         assert_eq!(expected, output);
         let expected = vec![
-            vec!['3', '6', '9', '#'],
-            vec!['2', '5', '8', '0'],
-            vec!['1', '4', '7', '*'],
+            vec!['*', '7', '4', '1'],
+            vec!['0', '8', '5', '2'],
+            vec!['#', '9', '6', '3'],
         ];
-        let output = rotate_matrix_clockwise(output);
+        let output = rotate_matrix_counter_clockwise(output);
         assert_eq!(expected, output);
-        let output = rotate_matrix_clockwise(output);
+        let output = rotate_matrix_counter_clockwise(output);
         assert_eq!(input, output);
     }
 
