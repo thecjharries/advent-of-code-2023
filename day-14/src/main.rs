@@ -33,6 +33,18 @@ fn transpose(input: Vec<Vec<char>>) -> Vec<Vec<char>> {
     output
 }
 
+fn rotate_matrix_clockwise(input: Vec<Vec<char>>) -> Vec<Vec<char>> {
+    let mut output = Vec::new();
+    for column in 0..input[0].len() {
+        let mut row = Vec::new();
+        for row_index in (0..input.len()).rev() {
+            row.push(input[row_index][column]);
+        }
+        output.push(row);
+    }
+    output
+}
+
 fn tilt_transposed_north(input: Vec<Vec<char>>) -> Vec<Vec<char>> {
     let mut output = Vec::new();
     for row in input {
@@ -105,6 +117,22 @@ mod tests {
             vec!['3', '6', '9', '#'],
         ];
         assert_eq!(expected, transpose(input));
+    }
+
+    #[test]
+    fn rotate_matrix_clockwise_works_as_expected() {
+        let input = vec![
+            vec!['1', '2', '3'],
+            vec!['4', '5', '6'],
+            vec!['7', '8', '9'],
+            vec!['*', '0', '#'],
+        ];
+        let expected = vec![
+            vec!['*', '7', '4', '1'],
+            vec!['0', '8', '5', '2'],
+            vec!['#', '9', '6', '3'],
+        ];
+        assert_eq!(expected, rotate_matrix_clockwise(input));
     }
 
     #[test]
