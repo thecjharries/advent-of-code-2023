@@ -132,7 +132,25 @@ mod tests {
             vec!['0', '8', '5', '2'],
             vec!['#', '9', '6', '3'],
         ];
-        assert_eq!(expected, rotate_matrix_clockwise(input));
+        let output = rotate_matrix_clockwise(input.clone());
+        assert_eq!(expected, output);
+        let expected = vec![
+            vec!['#', '0', '*'],
+            vec!['9', '8', '7'],
+            vec!['6', '5', '4'],
+            vec!['3', '2', '1'],
+        ];
+        let output = rotate_matrix_clockwise(output);
+        assert_eq!(expected, output);
+        let expected = vec![
+            vec!['3', '6', '9', '#'],
+            vec!['2', '5', '8', '0'],
+            vec!['1', '4', '7', '*'],
+        ];
+        let output = rotate_matrix_clockwise(output);
+        assert_eq!(expected, output);
+        let output = rotate_matrix_clockwise(output);
+        assert_eq!(input, output);
     }
 
     #[test]
