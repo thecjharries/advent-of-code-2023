@@ -127,6 +127,8 @@ mod tests {
 
     #[test]
     fn can_find_reflection_lines_above() {
+        let input = vec![vec!['.', '+'], vec!['#', '.']];
+        assert_eq!(0, find_reflection(input));
         let input = vec![
             vec!['#', '.', '.', '.', '#', '#', '.', '.', '#'],
             vec!['#', '.', '.', '.', '.', '#', '.', '.', '#'],
