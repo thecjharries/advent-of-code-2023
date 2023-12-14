@@ -128,7 +128,33 @@ fn cycle_transposed_load_once(input: Vec<Vec<char>>) -> Vec<Vec<char>> {
 }
 
 fn part2(input: String) -> usize {
-    todo!()
+    let mut map = transpose(parse_input_to_map(&input));
+    let mut seen = vec![map.clone()];
+    for _ in 0..1000000000 {
+        map = cycle_transposed_load_once(map);
+        if seen.contains(&map) {
+            break;
+        }
+        seen.push(map.clone());
+    }
+    let index = seen.iter().position(|x| *x == map).unwrap();
+    let cycle_length = seen.len() - index;
+    let index = index + (1000000000 - index) % cycle_length;
+    let map = seen[index].clone();
+    map.iter()
+        .map(|row| {
+            row.iter()
+                .enumerate()
+                .map(|(index, character)| {
+                    if 'O' == *character {
+                        row.len() - index
+                    } else {
+                        0
+                    }
+                })
+                .sum::<usize>()
+        })
+        .sum()
 }
 
 #[cfg(not(tarpaulin_include))]
