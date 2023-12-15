@@ -63,4 +63,12 @@ mod tests {
         // ot=7 becomes 231.
         assert_eq!(231, reindeer_hash("ot=7"));
     }
+
+    #[test]
+    fn solves_part1() {
+        assert_eq!(
+            1320,
+            part1("rn=1,cm-,qp=3,cm=2,qp-,pc=4,ot=9,ab=5,pc-,pc=6,ot=7".to_string())
+        );
+    }
 }
