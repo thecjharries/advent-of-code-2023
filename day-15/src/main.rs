@@ -32,7 +32,8 @@ fn reindeer_hash(input: &str) -> usize {
 }
 
 fn part1(input: String) -> usize {
-    todo!()
+    let input = input.trim();
+    input.split(',').map(reindeer_hash).sum()
 }
 
 fn part2(input: String) -> usize {
