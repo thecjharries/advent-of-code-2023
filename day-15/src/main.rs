@@ -78,4 +78,12 @@ mod tests {
             part1("rn=1,cm-,qp=3,cm=2,qp-,pc=4,ot=9,ab=5,pc-,pc=6,ot=7".to_string())
         );
     }
+
+    #[test]
+    fn solves_part2() {
+        assert_eq!(
+            145,
+            part2("rn=1,cm-,qp=3,cm=2,qp-,pc=4,ot=9,ab=5,pc-,pc=6,ot=7".to_string())
+        );
+    }
 }
