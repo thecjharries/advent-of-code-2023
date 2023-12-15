@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use std::collections::BTreeMap;
 use std::fs::read_to_string;
 
 #[cfg(not(tarpaulin_include))]
@@ -37,7 +38,36 @@ fn part1(input: String) -> usize {
 }
 
 fn part2(input: String) -> usize {
-    todo!()
+    let input = input.trim();
+    let mut boxes: BTreeMap<usize, Vec<(&str, usize)>> =
+        BTreeMap::from_iter((0..256).map(|index| (index, Vec::new())));
+    let labels = input.split(',');
+    for value in labels {
+        let label = &value[0..2];
+        let box_index = reindeer_hash(label);
+        if value.ends_with('-') {
+            let box_contents = boxes.get(&box_index).unwrap();
+            let new_contents = box_contents
+                .iter()
+                .filter(|(contents_label, _)| *contents_label != label)
+                .cloned()
+                .collect();
+            boxes.insert(box_index, new_contents);
+        } else {
+            let focal_point = value[3..].parse::<usize>().unwrap();
+            let box_contents = boxes.get_mut(&box_index).unwrap();
+            box_contents.push((label, focal_point));
+        }
+    }
+    let mut focusing_power = 0;
+    for (box_index, box_contents) in boxes {
+        if box_contents.len() > 0 {
+            for (index, (_, focal_point)) in box_contents.iter().enumerate() {
+                focusing_power += focal_point * (index + 1) * (box_index + 1);
+            }
+        }
+    }
+    focusing_power
 }
 
 #[cfg(not(tarpaulin_include))]
@@ -81,6 +111,13 @@ mod tests {
 
     #[test]
     fn solves_part2() {
+        assert_eq!(0, reindeer_hash("rn"));
+        assert_eq!(1, part2("rn=1".to_string()));
+        assert_eq!(1, part2("rn=1,cm-".to_string()));
+        assert_eq!(1, reindeer_hash("qp"));
+        assert_eq!(6, part2("qp=3".to_string()));
+        assert_eq!(7, part2("rn=1,cm-,qp=3".to_string()));
+        assert_eq!(5, part2("rn=1,cm-,qp=3,cm=2,qp-".to_string()));
         assert_eq!(
             145,
             part2("rn=1,cm-,qp=3,cm=2,qp-,pc=4,ot=9,ab=5,pc-,pc=6,ot=7".to_string())
