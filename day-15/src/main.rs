@@ -56,7 +56,14 @@ fn part2(input: String) -> usize {
         } else {
             let focal_point = value[3..].parse::<usize>().unwrap();
             let box_contents = boxes.get_mut(&box_index).unwrap();
-            box_contents.push((label, focal_point));
+            if let Some(position) = box_contents
+                .iter()
+                .position(|(contents_label, _)| *contents_label == label)
+            {
+                box_contents[position] = (label, focal_point);
+            } else {
+                box_contents.push((label, focal_point));
+            }
         }
     }
     let mut focusing_power = 0;
