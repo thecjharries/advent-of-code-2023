@@ -43,9 +43,9 @@ fn part2(input: String) -> usize {
         BTreeMap::from_iter((0..256).map(|index| (index, Vec::new())));
     let labels = input.split(',');
     for value in labels {
-        let label = &value[0..2];
-        let box_index = reindeer_hash(label);
         if value.ends_with('-') {
+            let label = &value[..value.len() - 1];
+            let box_index = reindeer_hash(label);
             let box_contents = boxes.get(&box_index).unwrap();
             let new_contents = box_contents
                 .iter()
@@ -54,7 +54,10 @@ fn part2(input: String) -> usize {
                 .collect();
             boxes.insert(box_index, new_contents);
         } else {
-            let focal_point = value[3..].parse::<usize>().unwrap();
+            let label_parts = value.split('=').collect::<Vec<&str>>();
+            let label = label_parts[0];
+            let box_index = reindeer_hash(label);
+            let focal_point = label_parts[1].parse::<usize>().unwrap();
             let box_contents = boxes.get_mut(&box_index).unwrap();
             if let Some(position) = box_contents
                 .iter()
