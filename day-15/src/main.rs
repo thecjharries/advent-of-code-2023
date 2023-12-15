@@ -22,7 +22,13 @@ fn main() {
 }
 
 fn reindeer_hash(input: &str) -> usize {
-    todo!()
+    let mut hash = 0;
+    for character in input.chars() {
+        hash += character as usize;
+        hash *= 17;
+        hash %= 256;
+    }
+    hash
 }
 
 fn part1(input: String) -> usize {
