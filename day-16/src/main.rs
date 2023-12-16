@@ -39,6 +39,18 @@ enum CellContents {
     Beam(Vec<Direction>),
 }
 
+impl CellContents {
+    fn from_char(character: char) -> Self {
+        match character {
+            '/' => Self::ForwardMirror,
+            '\\' => Self::BackwardMirror,
+            '|' => Self::VerticalSplitter,
+            '-' => Self::HorizontalSplitter,
+            _ => Self::Empty,
+        }
+    }
+}
+
 #[derive(Debug, PartialEq, Eq)]
 struct MapCell {
     contents: CellContents,
@@ -57,4 +69,16 @@ fn part2(input: String) -> usize {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_cell_contents_from_char() {
+        assert_eq!(CellContents::from_char('/'), CellContents::ForwardMirror);
+        assert_eq!(CellContents::from_char('\\'), CellContents::BackwardMirror);
+        assert_eq!(CellContents::from_char('|'), CellContents::VerticalSplitter);
+        assert_eq!(
+            CellContents::from_char('-'),
+            CellContents::HorizontalSplitter
+        );
+        assert_eq!(CellContents::from_char('.'), CellContents::Empty);
+    }
 }
