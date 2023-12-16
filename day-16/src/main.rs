@@ -109,6 +109,12 @@ struct MapCell {
     energized: bool,
 }
 
+impl std::fmt::Display for MapCell {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "{}", self.contents)
+    }
+}
+
 impl MapCell {
     fn new_from_char(character: char) -> Self {
         Self {
@@ -138,6 +144,18 @@ struct Map {
     cells: Vec<Vec<MapCell>>,
     width: usize,
     height: usize,
+}
+
+impl std::fmt::Display for Map {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        for row in &self.cells {
+            for cell in row {
+                write!(f, "{}", cell)?;
+            }
+            write!(f, "\n")?;
+        }
+        Ok(())
+    }
 }
 
 impl Map {
@@ -262,6 +280,13 @@ mod tests {
                 energized: false
             }
         );
+    }
+
+    #[test]
+    fn map_can_print() {
+        let input = "/--\\\n|..|\n|..|\n\\--/\n";
+        let map = Map::new(input);
+        assert_eq!(map.to_string(), input);
     }
 
     #[test]
