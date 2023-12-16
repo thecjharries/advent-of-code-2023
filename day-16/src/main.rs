@@ -39,6 +39,30 @@ enum CellContents {
     Beam(Vec<Direction>),
 }
 
+impl std::fmt::Display for CellContents {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        match self {
+            Self::Empty => write!(f, "."),
+            Self::ForwardMirror => write!(f, "/"),
+            Self::BackwardMirror => write!(f, "\\"),
+            Self::VerticalSplitter => write!(f, "|"),
+            Self::HorizontalSplitter => write!(f, "-"),
+            Self::Beam(directions) => {
+                if 1 < directions.len() {
+                    write!(f, "{}", directions.len())
+                } else {
+                    match directions[0] {
+                        Direction::East => write!(f, ">"),
+                        Direction::South => write!(f, "v"),
+                        Direction::West => write!(f, "<"),
+                        Direction::North => write!(f, "^"),
+                    }
+                }
+            }
+        }
+    }
+}
+
 impl CellContents {
     fn from_char(character: char) -> Self {
         match character {
@@ -124,7 +148,6 @@ impl Map {
             let line = line.trim();
             let mut row = Vec::new();
             for character in line.chars() {
-                println!("'{}'", character);
                 row.push(MapCell::new_from_char(character));
             }
             cells.push(row);
@@ -168,6 +191,20 @@ mod tests {
             CellContents::HorizontalSplitter
         );
         assert_eq!(CellContents::from_char('.'), CellContents::Empty);
+    }
+
+    #[test]
+    fn cellcontents_can_print() {
+        assert_eq!(CellContents::Empty.to_string(), ".");
+        assert_eq!(CellContents::ForwardMirror.to_string(), "/");
+        assert_eq!(CellContents::BackwardMirror.to_string(), "\\");
+        assert_eq!(CellContents::VerticalSplitter.to_string(), "|");
+        assert_eq!(CellContents::HorizontalSplitter.to_string(), "-");
+        assert_eq!(CellContents::Beam(vec![Direction::East]).to_string(), ">");
+        assert_eq!(
+            CellContents::Beam(vec![Direction::East, Direction::South]).to_string(),
+            "2"
+        );
     }
 
     #[test]
