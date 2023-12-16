@@ -111,7 +111,30 @@ impl MapCell {
 
 #[derive(Debug, PartialEq, Eq)]
 struct Map {
-    cells: Vec<MapCell>,
+    cells: Vec<Vec<MapCell>>,
+    width: usize,
+    height: usize,
+}
+
+impl Map {
+    fn new(input: &str) -> Self {
+        let input = input.trim();
+        let mut cells = Vec::new();
+        for line in input.lines() {
+            let line = line.trim();
+            let mut row = Vec::new();
+            for character in line.chars() {
+                println!("'{}'", character);
+                row.push(MapCell::new_from_char(character));
+            }
+            cells.push(row);
+        }
+        Self {
+            width: cells[0].len(),
+            height: cells.len(),
+            cells,
+        }
+    }
 }
 
 fn part1(input: String) -> usize {
@@ -230,6 +253,38 @@ mod tests {
         assert_eq!(
             CellContents::Beam(vec![Direction::East, Direction::South]),
             map_cell.contents
+        );
+    }
+
+    #[test]
+    fn test_map_new() {
+        let input = r#"/--\
+                       |..|
+                       |..|
+                       \--/"#;
+        let map = Map::new(input);
+        assert_eq!(4, map.width);
+        assert_eq!(4, map.height);
+        assert_eq!(
+            vec![
+                MapCell {
+                    contents: CellContents::ForwardMirror,
+                    energized: false
+                },
+                MapCell {
+                    contents: CellContents::HorizontalSplitter,
+                    energized: false
+                },
+                MapCell {
+                    contents: CellContents::HorizontalSplitter,
+                    energized: false
+                },
+                MapCell {
+                    contents: CellContents::BackwardMirror,
+                    energized: false
+                }
+            ],
+            map.cells[0]
         );
     }
 }
