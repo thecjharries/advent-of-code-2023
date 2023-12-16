@@ -49,6 +49,34 @@ impl CellContents {
             _ => Self::Empty,
         }
     }
+
+    fn next_move(&self, direction: Direction) -> Vec<Direction> {
+        match self {
+            Self::ForwardMirror => match direction {
+                Direction::East => vec![Direction::South],
+                Direction::South => vec![Direction::East],
+                Direction::West => vec![Direction::North],
+                Direction::North => vec![Direction::West],
+            },
+            Self::BackwardMirror => match direction {
+                Direction::East => vec![Direction::North],
+                Direction::South => vec![Direction::West],
+                Direction::West => vec![Direction::South],
+                Direction::North => vec![Direction::East],
+            },
+            Self::VerticalSplitter => match direction {
+                Direction::East => vec![Direction::South, Direction::North],
+                Direction::West => vec![Direction::South, Direction::North],
+                _ => vec![direction],
+            },
+            Self::HorizontalSplitter => match direction {
+                Direction::South => vec![Direction::East, Direction::West],
+                Direction::North => vec![Direction::East, Direction::West],
+                _ => vec![direction],
+            },
+            _ => vec![direction],
+        }
+    }
 }
 
 #[derive(Debug, PartialEq, Eq)]
@@ -89,6 +117,52 @@ mod tests {
             CellContents::HorizontalSplitter
         );
         assert_eq!(CellContents::from_char('.'), CellContents::Empty);
+    }
+
+    #[test]
+    fn movement_from_a_cell_matches_directions() {
+        let contents = CellContents::ForwardMirror;
+        assert_eq!(vec![Direction::South], contents.next_move(Direction::East));
+        assert_eq!(vec![Direction::East], contents.next_move(Direction::South));
+        assert_eq!(vec![Direction::North], contents.next_move(Direction::West));
+        assert_eq!(vec![Direction::West], contents.next_move(Direction::North));
+        let contents = CellContents::BackwardMirror;
+        assert_eq!(vec![Direction::North], contents.next_move(Direction::East));
+        assert_eq!(vec![Direction::West], contents.next_move(Direction::South));
+        assert_eq!(vec![Direction::South], contents.next_move(Direction::West));
+        assert_eq!(vec![Direction::East], contents.next_move(Direction::North));
+        let contents = CellContents::VerticalSplitter;
+        assert_eq!(
+            vec![Direction::South, Direction::North],
+            contents.next_move(Direction::East)
+        );
+        assert_eq!(
+            vec![Direction::South, Direction::North],
+            contents.next_move(Direction::West)
+        );
+        assert_eq!(vec![Direction::South], contents.next_move(Direction::South));
+        assert_eq!(vec![Direction::North], contents.next_move(Direction::North));
+        let contents = CellContents::HorizontalSplitter;
+        assert_eq!(
+            vec![Direction::East, Direction::West],
+            contents.next_move(Direction::South)
+        );
+        assert_eq!(
+            vec![Direction::East, Direction::West],
+            contents.next_move(Direction::North)
+        );
+        assert_eq!(vec![Direction::East], contents.next_move(Direction::East));
+        assert_eq!(vec![Direction::West], contents.next_move(Direction::West));
+        let contents = CellContents::Empty;
+        assert_eq!(vec![Direction::East], contents.next_move(Direction::East));
+        assert_eq!(vec![Direction::South], contents.next_move(Direction::South));
+        assert_eq!(vec![Direction::West], contents.next_move(Direction::West));
+        assert_eq!(vec![Direction::North], contents.next_move(Direction::North));
+        let contents = CellContents::Beam(vec![Direction::East]);
+        assert_eq!(vec![Direction::East], contents.next_move(Direction::East));
+        assert_eq!(vec![Direction::South], contents.next_move(Direction::South));
+        assert_eq!(vec![Direction::West], contents.next_move(Direction::West));
+        assert_eq!(vec![Direction::North], contents.next_move(Direction::North));
     }
 
     #[test]
