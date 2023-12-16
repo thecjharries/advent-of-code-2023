@@ -39,6 +39,12 @@ enum CellContents {
     Beam(Vec<Direction>),
 }
 
+#[derive(Debug, PartialEq, Eq)]
+struct MapCell {
+    contents: CellContents,
+    energized: bool,
+}
+
 fn part1(input: String) -> usize {
     todo!()
 }
