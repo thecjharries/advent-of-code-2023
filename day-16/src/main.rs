@@ -77,16 +77,16 @@ impl CellContents {
     fn next_move(&self, direction: Direction) -> Vec<Direction> {
         match self {
             Self::ForwardMirror => match direction {
-                Direction::East => vec![Direction::South],
-                Direction::South => vec![Direction::East],
-                Direction::West => vec![Direction::North],
-                Direction::North => vec![Direction::West],
-            },
-            Self::BackwardMirror => match direction {
                 Direction::East => vec![Direction::North],
                 Direction::South => vec![Direction::West],
                 Direction::West => vec![Direction::South],
                 Direction::North => vec![Direction::East],
+            },
+            Self::BackwardMirror => match direction {
+                Direction::East => vec![Direction::South],
+                Direction::South => vec![Direction::East],
+                Direction::West => vec![Direction::North],
+                Direction::North => vec![Direction::West],
             },
             Self::VerticalSplitter => match direction {
                 Direction::East => vec![Direction::South, Direction::North],
@@ -228,15 +228,15 @@ mod tests {
     #[test]
     fn movement_from_a_cell_matches_directions() {
         let contents = CellContents::ForwardMirror;
-        assert_eq!(vec![Direction::South], contents.next_move(Direction::East));
-        assert_eq!(vec![Direction::East], contents.next_move(Direction::South));
-        assert_eq!(vec![Direction::North], contents.next_move(Direction::West));
-        assert_eq!(vec![Direction::West], contents.next_move(Direction::North));
-        let contents = CellContents::BackwardMirror;
         assert_eq!(vec![Direction::North], contents.next_move(Direction::East));
         assert_eq!(vec![Direction::West], contents.next_move(Direction::South));
         assert_eq!(vec![Direction::South], contents.next_move(Direction::West));
         assert_eq!(vec![Direction::East], contents.next_move(Direction::North));
+        let contents = CellContents::BackwardMirror;
+        assert_eq!(vec![Direction::South], contents.next_move(Direction::East));
+        assert_eq!(vec![Direction::East], contents.next_move(Direction::South));
+        assert_eq!(vec![Direction::North], contents.next_move(Direction::West));
+        assert_eq!(vec![Direction::West], contents.next_move(Direction::North));
         let contents = CellContents::VerticalSplitter;
         assert_eq!(
             vec![Direction::South, Direction::North],
@@ -292,10 +292,10 @@ mod tests {
     #[test]
     fn map_cells_can_properly_move() {
         let mut map_cell = MapCell::new_from_char('/');
-        assert_eq!(vec![Direction::South], map_cell.next_move(Direction::East));
+        assert_eq!(vec![Direction::North], map_cell.next_move(Direction::East));
         assert!(map_cell.energized);
         let mut map_cell = MapCell::new_from_char('\\');
-        assert_eq!(vec![Direction::North], map_cell.next_move(Direction::East));
+        assert_eq!(vec![Direction::South], map_cell.next_move(Direction::East));
         assert!(map_cell.energized);
         let mut map_cell = MapCell::new_from_char('|');
         assert_eq!(
