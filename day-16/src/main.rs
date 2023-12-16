@@ -184,6 +184,42 @@ impl Map {
             .filter(|cell| cell.energized)
             .count()
     }
+
+    fn energize(&mut self) {
+        let mut beams: Vec<(usize, usize, Direction)> = Vec::new();
+        beams.push((0, 0, Direction::East));
+        while !beams.is_empty() {
+            let (x, y, direction) = beams.pop().unwrap();
+            println!("{} {} {:?}", x, y, direction);
+            let cell = &mut self.cells[y][x];
+            let next_moves = cell.next_move(direction);
+            for next_move in next_moves {
+                match next_move {
+                    Direction::East => {
+                        if x + 1 < self.width {
+                            beams.push((x + 1, y, next_move));
+                        }
+                    }
+                    Direction::South => {
+                        if y + 1 < self.height {
+                            beams.push((x, y + 1, next_move));
+                        }
+                    }
+                    Direction::West => {
+                        if x > 0 {
+                            beams.push((x - 1, y, next_move));
+                        }
+                    }
+                    Direction::North => {
+                        if y > 0 {
+                            beams.push((x, y - 1, next_move));
+                        }
+                    }
+                }
+            }
+        }
+        println!("{}", self);
+    }
 }
 
 fn part1(input: String) -> usize {
@@ -366,5 +402,33 @@ mod tests {
                        \--/"#;
         let map = Map::new(input);
         assert_eq!(0, map.get_energized_count());
+    }
+
+    #[test]
+    fn energize_creates_necessary_beams() {
+        let input = "..\n..";
+        let mut map = Map::new(input);
+        map.energize();
+        assert_eq!(2, map.get_energized_count());
+        let input = "..\\\n..-\n...";
+        let mut map = Map::new(input);
+        map.energize();
+        assert_eq!(6, map.get_energized_count());
+    }
+
+    #[test]
+    fn solves_part1() {
+        let input =".|...\....
+        |.-.\.....
+        .....|-...
+        ........|.
+        ..........
+        .........\
+        ..../.\\..
+        .-.-/..|..
+        .|....-|.\
+        ..//.|....
+        ";
+        assert_eq!(46, part1(input.to_string()));
     }
 }
