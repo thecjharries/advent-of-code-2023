@@ -109,6 +109,11 @@ impl MapCell {
     }
 }
 
+#[derive(Debug, PartialEq, Eq)]
+struct Map {
+    cells: Vec<MapCell>,
+}
+
 fn part1(input: String) -> usize {
     todo!()
 }
