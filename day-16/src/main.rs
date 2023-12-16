@@ -21,7 +21,7 @@ fn main() {
     println!("Part 2: {}", part2(input));
 }
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq, Clone)]
 enum Direction {
     East,
     South,
@@ -91,6 +91,21 @@ impl MapCell {
             contents: CellContents::from_char(character),
             energized: false,
         }
+    }
+
+    fn next_move(&mut self, direction: Direction) -> Vec<Direction> {
+        self.energized = true;
+        if let CellContents::Beam(directions) = &self.contents {
+            let mut new_directions = directions.clone();
+            if !new_directions.contains(&direction) {
+                new_directions.push(direction.clone());
+                self.contents = CellContents::Beam(new_directions);
+            }
+        }
+        if let CellContents::Empty = &self.contents {
+            self.contents = CellContents::Beam(vec![direction.clone()]);
+        }
+        self.contents.next_move(direction)
     }
 }
 
@@ -173,6 +188,43 @@ mod tests {
                 contents: CellContents::ForwardMirror,
                 energized: false
             }
+        );
+    }
+
+    #[test]
+    fn map_cells_can_properly_move() {
+        let mut map_cell = MapCell::new_from_char('/');
+        assert_eq!(vec![Direction::South], map_cell.next_move(Direction::East));
+        assert!(map_cell.energized);
+        let mut map_cell = MapCell::new_from_char('\\');
+        assert_eq!(vec![Direction::North], map_cell.next_move(Direction::East));
+        assert!(map_cell.energized);
+        let mut map_cell = MapCell::new_from_char('|');
+        assert_eq!(
+            vec![Direction::South, Direction::North],
+            map_cell.next_move(Direction::East)
+        );
+        assert!(map_cell.energized);
+        let mut map_cell = MapCell::new_from_char('-');
+        assert_eq!(
+            vec![Direction::East, Direction::West],
+            map_cell.next_move(Direction::South)
+        );
+        assert!(map_cell.energized);
+        let mut map_cell = MapCell::new_from_char('.');
+        assert_eq!(vec![Direction::East], map_cell.next_move(Direction::East));
+        assert_eq!(CellContents::Beam(vec![Direction::East]), map_cell.contents);
+        assert!(map_cell.energized);
+        let mut map_cell = MapCell {
+            contents: CellContents::Beam(vec![Direction::East]),
+            energized: true,
+        };
+        assert_eq!(vec![Direction::East], map_cell.next_move(Direction::East));
+        assert_eq!(CellContents::Beam(vec![Direction::East]), map_cell.contents);
+        assert_eq!(vec![Direction::South], map_cell.next_move(Direction::South));
+        assert_eq!(
+            CellContents::Beam(vec![Direction::East, Direction::South]),
+            map_cell.contents
         );
     }
 }
