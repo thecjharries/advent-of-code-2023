@@ -135,6 +135,14 @@ impl Map {
             cells,
         }
     }
+
+    fn get_energized_count(&self) -> usize {
+        self.cells
+            .iter()
+            .flatten()
+            .filter(|cell| cell.energized)
+            .count()
+    }
 }
 
 fn part1(input: String) -> usize {
@@ -286,5 +294,15 @@ mod tests {
             ],
             map.cells[0]
         );
+    }
+
+    #[test]
+    fn test_get_energized_count() {
+        let input = r#"/--\
+                       |..|
+                       |..|
+                       \--/"#;
+        let map = Map::new(input);
+        assert_eq!(0, map.get_energized_count());
     }
 }
