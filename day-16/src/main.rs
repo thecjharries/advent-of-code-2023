@@ -21,6 +21,14 @@ fn main() {
     println!("Part 2: {}", part2(input));
 }
 
+#[derive(Debug, PartialEq, Eq)]
+enum Direction {
+    East,
+    South,
+    West,
+    North,
+}
+
 fn part1(input: String) -> usize {
     todo!()
 }
