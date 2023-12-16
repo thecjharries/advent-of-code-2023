@@ -39,6 +39,7 @@ enum CellContents {
     Beam(Vec<Direction>),
 }
 
+#[cfg(not(tarpaulin_include))]
 impl std::fmt::Display for CellContents {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match self {
@@ -233,6 +234,7 @@ fn part1(input: String) -> usize {
     map.get_energized_count()
 }
 
+#[cfg(not(tarpaulin_include))]
 fn part2(input: String) -> usize {
     let mut map = Map::new(&input);
     map.energize(0, 0, Direction::East);
