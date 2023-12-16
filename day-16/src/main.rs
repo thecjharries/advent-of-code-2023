@@ -224,7 +224,6 @@ impl Map {
                 }
             }
         }
-        println!("{}", self);
     }
 }
 
