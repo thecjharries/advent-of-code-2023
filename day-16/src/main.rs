@@ -57,6 +57,15 @@ struct MapCell {
     energized: bool,
 }
 
+impl MapCell {
+    fn new_from_char(character: char) -> Self {
+        Self {
+            contents: CellContents::from_char(character),
+            energized: false,
+        }
+    }
+}
+
 fn part1(input: String) -> usize {
     todo!()
 }
@@ -80,5 +89,16 @@ mod tests {
             CellContents::HorizontalSplitter
         );
         assert_eq!(CellContents::from_char('.'), CellContents::Empty);
+    }
+
+    #[test]
+    fn test_map_cell_new_from_char() {
+        assert_eq!(
+            MapCell::new_from_char('/'),
+            MapCell {
+                contents: CellContents::ForwardMirror,
+                energized: false
+            }
+        );
     }
 }
