@@ -29,6 +29,16 @@ enum Direction {
     North,
 }
 
+#[derive(Debug, PartialEq, Eq)]
+enum CellContents {
+    Empty,
+    ForwardMirror,
+    BackwardMirror,
+    VerticalSplitter,
+    HorizontalSplitter,
+    Beam(Vec<Direction>),
+}
+
 fn part1(input: String) -> usize {
     todo!()
 }
