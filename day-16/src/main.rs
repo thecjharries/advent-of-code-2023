@@ -445,4 +445,20 @@ mod tests {
         ";
         assert_eq!(46, part1(input.to_string()));
     }
+
+    #[test]
+    fn solves_part2() {
+        let input = ".|...\\....
+        |.-.\\.....
+        .....|-...
+        ........|.
+        ..........
+        .........\\
+        ..../.\\\\..
+        .-.-/..|..
+        .|....-|.\\
+        ..//.|....
+        ";
+        assert_eq!(51, part2(input.to_string()));
+    }
 }
