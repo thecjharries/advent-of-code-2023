@@ -235,7 +235,34 @@ fn part1(input: String) -> usize {
 }
 
 fn part2(input: String) -> usize {
-    todo!()
+    let mut map = Map::new(&input);
+    map.energize(0, 0, Direction::East);
+    let mut max_energized = map.get_energized_count();
+    for start_x in 0..map.width {
+        let mut top_down = Map::new(&input);
+        top_down.energize(start_x, 0, Direction::South);
+        if top_down.get_energized_count() > max_energized {
+            max_energized = top_down.get_energized_count();
+        }
+        let mut bottom_up = Map::new(&input);
+        bottom_up.energize(start_x, map.height - 1, Direction::North);
+        if bottom_up.get_energized_count() > max_energized {
+            max_energized = bottom_up.get_energized_count();
+        }
+    }
+    for start_y in 0..map.height {
+        let mut left_right = Map::new(&input);
+        left_right.energize(0, start_y, Direction::East);
+        if left_right.get_energized_count() > max_energized {
+            max_energized = left_right.get_energized_count();
+        }
+        let mut right_left = Map::new(&input);
+        right_left.energize(map.width - 1, start_y, Direction::West);
+        if right_left.get_energized_count() > max_energized {
+            max_energized = right_left.get_energized_count();
+        }
+    }
+    max_energized
 }
 
 #[cfg(not(tarpaulin_include))]
