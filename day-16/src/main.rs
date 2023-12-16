@@ -229,7 +229,9 @@ impl Map {
 }
 
 fn part1(input: String) -> usize {
-    todo!()
+    let mut map = Map::new(&input);
+    map.energize();
+    map.get_energized_count()
 }
 
 fn part2(input: String) -> usize {
@@ -430,15 +432,15 @@ mod tests {
 
     #[test]
     fn solves_part1() {
-        let input =".|...\....
-        |.-.\.....
+        let input = ".|...\\....
+        |.-.\\.....
         .....|-...
         ........|.
         ..........
-        .........\
-        ..../.\\..
+        .........\\
+        ..../.\\\\..
         .-.-/..|..
-        .|....-|.\
+        .|....-|.\\
         ..//.|....
         ";
         assert_eq!(46, part1(input.to_string()));
