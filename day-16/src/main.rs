@@ -192,9 +192,9 @@ impl Map {
             .count()
     }
 
-    fn energize(&mut self) {
+    fn energize(&mut self, start_x: usize, start_y: usize, direction: Direction) {
         let mut beams: Vec<(usize, usize, Direction)> = Vec::new();
-        beams.push((0, 0, Direction::East));
+        beams.push((start_x, start_y, direction));
         while !beams.is_empty() {
             let (x, y, direction) = beams.pop().unwrap();
             let cell = &mut self.cells[y][x];
@@ -230,7 +230,7 @@ impl Map {
 
 fn part1(input: String) -> usize {
     let mut map = Map::new(&input);
-    map.energize();
+    map.energize(0, 0, Direction::East);
     map.get_energized_count()
 }
 
@@ -422,11 +422,11 @@ mod tests {
     fn energize_creates_necessary_beams() {
         let input = "..\n..";
         let mut map = Map::new(input);
-        map.energize();
+        map.energize(0, 0, Direction::East);
         assert_eq!(2, map.get_energized_count());
         let input = "..\\\n..-\n...";
         let mut map = Map::new(input);
-        map.energize();
+        map.energize(0, 0, Direction::East);
         assert_eq!(6, map.get_energized_count());
     }
 
