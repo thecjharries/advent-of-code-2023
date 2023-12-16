@@ -107,6 +107,7 @@ impl CellContents {
 struct MapCell {
     contents: CellContents,
     energized: bool,
+    entered_from: Vec<Direction>,
 }
 
 impl std::fmt::Display for MapCell {
@@ -120,10 +121,16 @@ impl MapCell {
         Self {
             contents: CellContents::from_char(character),
             energized: false,
+            entered_from: Vec::new(),
         }
     }
 
     fn next_move(&mut self, direction: Direction) -> Vec<Direction> {
+        if self.entered_from.contains(&direction) {
+            return Vec::new();
+        } else {
+            self.entered_from.push(direction.clone());
+        }
         self.energized = true;
         if let CellContents::Beam(directions) = &self.contents {
             let mut new_directions = directions.clone();
@@ -190,7 +197,6 @@ impl Map {
         beams.push((0, 0, Direction::East));
         while !beams.is_empty() {
             let (x, y, direction) = beams.pop().unwrap();
-            println!("{} {} {:?}", x, y, direction);
             let cell = &mut self.cells[y][x];
             let next_moves = cell.next_move(direction);
             for next_move in next_moves {
@@ -313,7 +319,8 @@ mod tests {
             MapCell::new_from_char('/'),
             MapCell {
                 contents: CellContents::ForwardMirror,
-                energized: false
+                energized: false,
+                entered_from: Vec::new(),
             }
         );
     }
@@ -352,6 +359,7 @@ mod tests {
         let mut map_cell = MapCell {
             contents: CellContents::Beam(vec![Direction::East]),
             energized: true,
+            entered_from: Vec::new(),
         };
         assert_eq!(vec![Direction::East], map_cell.next_move(Direction::East));
         assert_eq!(CellContents::Beam(vec![Direction::East]), map_cell.contents);
@@ -375,19 +383,23 @@ mod tests {
             vec![
                 MapCell {
                     contents: CellContents::ForwardMirror,
-                    energized: false
+                    energized: false,
+                    entered_from: Vec::new(),
                 },
                 MapCell {
                     contents: CellContents::HorizontalSplitter,
-                    energized: false
+                    energized: false,
+                    entered_from: Vec::new(),
                 },
                 MapCell {
                     contents: CellContents::HorizontalSplitter,
-                    energized: false
+                    energized: false,
+                    entered_from: Vec::new(),
                 },
                 MapCell {
                     contents: CellContents::BackwardMirror,
-                    energized: false
+                    energized: false,
+                    entered_from: Vec::new(),
                 }
             ],
             map.cells[0]
