@@ -21,6 +21,19 @@ fn main() {
     println!("Part 2: {}", part2(input));
 }
 
+fn parse_map(input: &str) -> Vec<Vec<usize>> {
+    let input = input.trim();
+    input
+        .lines()
+        .map(|line| {
+            let line = line.trim();
+            line.chars()
+                .map(|character| character.to_digit(10).unwrap() as usize)
+                .collect()
+        })
+        .collect()
+}
+
 fn part1(input: String) -> usize {
     todo!()
 }
@@ -33,6 +46,30 @@ fn part2(input: String) -> usize {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn can_properly_parse_map() {
+        assert_eq!(
+            vec![vec![1, 2, 3], vec![4, 5, 6], vec![7, 8, 9],],
+            parse_map(
+                "123
+                456
+                789
+                "
+            )
+        );
+    }
+
+    #[test]
+    #[should_panic]
+    fn panics_when_parsing_map_with_non_digit_characters() {
+        parse_map(
+            "123
+            4a6
+            789
+            ",
+        );
+    }
 
     #[test]
     fn solves_part1() {
