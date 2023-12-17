@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use std::cmp;
+use std::collections::{BinaryHeap, HashMap};
 use std::fs::read_to_string;
 
 #[cfg(not(tarpaulin_include))]
@@ -34,8 +36,81 @@ fn parse_map(input: &str) -> Vec<Vec<usize>> {
         .collect()
 }
 
+#[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Copy)]
+enum Direction {
+    North,
+    East,
+    South,
+    West,
+}
+
+fn find_least_heat_loss(map: Vec<Vec<usize>>) -> usize {
+    let mut queue = BinaryHeap::new();
+    let mut visited = HashMap::new();
+    let width = map[0].len();
+    let height = map.len();
+    queue.push((cmp::Reverse(0), 0, 0, 0, Direction::East));
+    while let Some((cmp::Reverse(heat_loss), x, y, steps, direction)) = queue.pop() {
+        if x == width - 1 && y == height - 1 {
+            return heat_loss;
+        }
+        if let Some(visited_steps) = visited.get(&(x, y, direction)) {
+            if visited_steps <= &steps {
+                continue;
+            }
+        }
+        visited.insert((x, y, direction), steps);
+        let can_move_straight = steps < 3;
+        let mut possible_moves = Vec::new();
+        if y > 0
+            && Direction::South != direction
+            && (can_move_straight || Direction::North != direction)
+        {
+            possible_moves.push((x, y - 1, Direction::North));
+        }
+        if x > 0
+            && Direction::East != direction
+            && (can_move_straight || Direction::West != direction)
+        {
+            possible_moves.push((x - 1, y, Direction::West));
+        }
+        if y < height - 1
+            && Direction::North != direction
+            && (can_move_straight || Direction::South != direction)
+        {
+            possible_moves.push((x, y + 1, Direction::South));
+        }
+        if x < width - 1
+            && Direction::West != direction
+            && (can_move_straight || Direction::East != direction)
+        {
+            possible_moves.push((x + 1, y, Direction::East));
+        }
+        possible_moves
+            .into_iter()
+            .for_each(|(new_x, new_y, new_direction)| {
+                let new_heat_loss = heat_loss + map[new_y][new_x];
+                let new_steps = if direction == new_direction {
+                    steps + 1
+                } else {
+                    1
+                };
+                queue.push((
+                    cmp::Reverse(new_heat_loss),
+                    new_x,
+                    new_y,
+                    new_steps,
+                    new_direction,
+                ));
+            });
+    }
+    unreachable!()
+}
+
 fn part1(input: String) -> usize {
-    todo!()
+    let input = input.trim();
+    let map = parse_map(input);
+    find_least_heat_loss(map)
 }
 
 fn part2(input: String) -> usize {
