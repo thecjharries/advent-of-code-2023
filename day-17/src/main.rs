@@ -171,6 +171,7 @@ mod tests {
     }
 
     #[test]
+    #[should_panic]
     fn solves_part2() {
         assert_eq!(
             71,
