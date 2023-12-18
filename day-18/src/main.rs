@@ -29,6 +29,17 @@ enum Direction {
     Left,
 }
 
+impl Direction {
+    fn from_char(character: char) -> Self {
+        match character {
+            'U' => Self::Up,
+            'R' => Self::Right,
+            'D' => Self::Down,
+            _ => Self::Left,
+        }
+    }
+}
+
 fn part1(input: String) -> usize {
     todo!()
 }
@@ -41,6 +52,14 @@ fn part2(input: String) -> usize {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn parses_directions() {
+        assert_eq!(Direction::Up, Direction::from_char('U'));
+        assert_eq!(Direction::Right, Direction::from_char('R'));
+        assert_eq!(Direction::Down, Direction::from_char('D'));
+        assert_eq!(Direction::Left, Direction::from_char('L'));
+    }
 
     #[test]
     fn solves_part1() {
