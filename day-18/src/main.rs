@@ -14,6 +14,8 @@
 
 use std::fs::read_to_string;
 
+use geo::{Area, Polygon};
+
 #[cfg(not(tarpaulin_include))]
 fn main() {
     let input = read_to_string("input.txt").expect("Unable to read input file");
@@ -56,7 +58,22 @@ fn parse_input(input: &str) -> Vec<(Direction, usize, String)> {
 }
 
 fn part1(input: String) -> usize {
-    todo!()
+    let directions = parse_input(&input);
+    let mut vertices = vec![(0.0, 0.0)];
+    let mut current_vertex = (0.0, 0.0);
+    let mut trench = 0;
+    for (direction, steps, _) in directions {
+        match direction {
+            Direction::Up => current_vertex.1 += steps as f64,
+            Direction::Right => current_vertex.0 += steps as f64,
+            Direction::Down => current_vertex.1 -= steps as f64,
+            Direction::Left => current_vertex.0 -= steps as f64,
+        }
+        vertices.push(current_vertex);
+        trench += steps;
+    }
+    let polygon = Polygon::new(vertices.into(), vec![]);
+    polygon.unsigned_area() as usize + trench / 2 + 1
 }
 
 fn part2(input: String) -> usize {
