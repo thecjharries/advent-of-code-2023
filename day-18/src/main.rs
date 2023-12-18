@@ -40,6 +40,21 @@ impl Direction {
     }
 }
 
+fn parse_input(input: &str) -> Vec<(Direction, usize, String)> {
+    let input = input.trim();
+    input
+        .lines()
+        .map(|line| {
+            let line = line.trim();
+            let mut line = line.split_whitespace();
+            let direction = Direction::from_char(line.next().unwrap().chars().next().unwrap());
+            let steps = line.next().unwrap().parse::<usize>().unwrap();
+            let color = line.next().unwrap().to_string();
+            (direction, steps, color)
+        })
+        .collect()
+}
+
 fn part1(input: String) -> usize {
     todo!()
 }
@@ -59,6 +74,26 @@ mod tests {
         assert_eq!(Direction::Right, Direction::from_char('R'));
         assert_eq!(Direction::Down, Direction::from_char('D'));
         assert_eq!(Direction::Left, Direction::from_char('L'));
+    }
+
+    #[test]
+    fn parses_input() {
+        // R 6 (#70c710)
+        // D 5 (#0dc571)
+        // L 2 (#5713f0)
+        assert_eq!(
+            vec![
+                (Direction::Right, 6, "(#70c710)".to_string()),
+                (Direction::Down, 5, "(#0dc571)".to_string()),
+                (Direction::Left, 2, "(#5713f0)".to_string()),
+            ],
+            parse_input(
+                "R 6 (#70c710)
+                D 5 (#0dc571)
+                L 2 (#5713f0)
+                "
+            )
+        );
     }
 
     #[test]
