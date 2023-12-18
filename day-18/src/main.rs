@@ -34,9 +34,9 @@ enum Direction {
 impl Direction {
     fn from_char(character: char) -> Self {
         match character {
-            'U' => Self::Up,
-            'R' => Self::Right,
-            'D' => Self::Down,
+            'U' | '3' => Self::Up,
+            'R' | '0' => Self::Right,
+            'D' | '1' => Self::Down,
             _ => Self::Left,
         }
     }
