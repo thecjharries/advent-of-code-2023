@@ -77,7 +77,24 @@ fn part1(input: String) -> usize {
 }
 
 fn part2(input: String) -> usize {
-    todo!()
+    let directions = parse_input(&input);
+    let mut vertices = vec![(0.0, 0.0)];
+    let mut current_vertex = (0.0, 0.0);
+    let mut trench = 0;
+    for (_, _, color) in directions {
+        let steps = usize::from_str_radix(&color[2..7], 16).unwrap();
+        let direction = Direction::from_char(color[7..8].chars().next().unwrap());
+        match direction {
+            Direction::Up => current_vertex.1 += steps as f64,
+            Direction::Right => current_vertex.0 += steps as f64,
+            Direction::Down => current_vertex.1 -= steps as f64,
+            Direction::Left => current_vertex.0 -= steps as f64,
+        }
+        vertices.push(current_vertex);
+        trench += steps;
+    }
+    let polygon = Polygon::new(vertices.into(), vec![]);
+    polygon.unsigned_area() as usize + trench / 2 + 1
 }
 
 #[cfg(not(tarpaulin_include))]
