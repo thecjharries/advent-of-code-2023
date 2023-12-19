@@ -71,6 +71,26 @@ impl Part {
     }
 }
 
+fn parse_workflow(input: &str) -> (String, Vec<(String, String)>) {
+    let input = input.trim();
+    let input = input.trim_end_matches('}');
+    let mut input = input.split('{');
+    let workflow_name = input.next().unwrap().to_string();
+    let mut parts = vec![];
+    let input = input.next().unwrap().split(',');
+    for part in input {
+        let mut part = part.split(':');
+        let condition = if 1 < part.clone().count() {
+            part.next().unwrap().to_string()
+        } else {
+            "true".to_string()
+        };
+        let next_workflow = part.next().unwrap().to_string();
+        parts.push((condition, next_workflow));
+    }
+    (workflow_name, parts)
+}
+
 fn part1(input: String) -> usize {
     todo!()
 }
@@ -110,6 +130,22 @@ mod tests {
                 s: 2876,
             }
             .rating()
+        );
+    }
+
+    #[test]
+    fn parses_workflow() {
+        let input = "rfg{s<537:gd,x>2440:R,A}";
+        assert_eq!(
+            (
+                "rfg".to_string(),
+                vec![
+                    ("s<537".to_string(), "gd".to_string()),
+                    ("x>2440".to_string(), "R".to_string()),
+                    ("true".to_string(), "A".to_string()),
+                ]
+            ),
+            parse_workflow(input)
         );
     }
 
