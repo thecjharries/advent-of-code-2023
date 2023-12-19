@@ -25,10 +25,12 @@ fn main() {
 enum ObjectState {
     Accepted,
     Rejected,
+    Workflow(String),
 }
 
 #[derive(Debug, PartialEq, Eq)]
 struct Part {
+    state: ObjectState,
     x: usize,
     m: usize,
     a: usize,
@@ -38,6 +40,7 @@ struct Part {
 impl Part {
     fn from_string(input: &str) -> Self {
         let mut part = Self {
+            state: ObjectState::Workflow("in".to_string()),
             x: 0,
             m: 0,
             a: 0,
@@ -85,6 +88,7 @@ mod tests {
     fn parses_part() {
         assert_eq!(
             Part {
+                state: ObjectState::Workflow("in".to_string()),
                 x: 787,
                 m: 2655,
                 a: 1222,
@@ -99,6 +103,7 @@ mod tests {
         assert_eq!(
             787 + 2655 + 1222 + 2876,
             Part {
+                state: ObjectState::Workflow("in".to_string()),
                 x: 787,
                 m: 2655,
                 a: 1222,
