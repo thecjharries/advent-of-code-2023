@@ -81,7 +81,7 @@ fn parse_workflow(input: &str) -> (String, Vec<(String, String)>) {
     let workflow_name = input.next().unwrap().to_string();
     let mut parts = vec![];
     let input = input.next().unwrap().split(',');
-    for part in input {
+    for part in input.into_iter().rev() {
         let mut part = part.split(':');
         let condition = if 1 < part.clone().count() {
             part.next().unwrap().to_string()
@@ -117,6 +117,7 @@ fn part1(input: String) -> usize {
         while let ObjectState::Workflow(ref current_workflow_name) = part.state {
             let mut current_workflow = workflow_map.get(current_workflow_name).unwrap().clone();
             while let Some((condition, next_workflow)) = current_workflow.pop() {
+                println!("{} -> {}", condition, next_workflow);
                 if Ok(true) == eval_boolean_with_context(&condition, &context) {
                     match next_workflow.as_str() {
                         "A" => part.state = ObjectState::Accepted,
@@ -181,9 +182,9 @@ mod tests {
             (
                 "rfg".to_string(),
                 vec![
-                    ("s<537".to_string(), "gd".to_string()),
-                    ("x>2440".to_string(), "R".to_string()),
                     ("true".to_string(), "A".to_string()),
+                    ("x>2440".to_string(), "R".to_string()),
+                    ("s<537".to_string(), "gd".to_string()),
                 ]
             ),
             parse_workflow(input)
@@ -198,21 +199,22 @@ mod tests {
         expected.insert(
             "px".to_string(),
             vec![
-                ("a<2006".to_string(), "qkq".to_string()),
-                ("m>2090".to_string(), "A".to_string()),
                 ("true".to_string(), "rfg".to_string()),
+                ("m>2090".to_string(), "A".to_string()),
+                ("a<2006".to_string(), "qkq".to_string()),
             ],
         );
         expected.insert(
             "pv".to_string(),
             vec![
-                ("a>1716".to_string(), "R".to_string()),
                 ("true".to_string(), "A".to_string()),
+                ("a>1716".to_string(), "R".to_string()),
             ],
         );
         assert_eq!(expected, build_workflow_map(input));
     }
 
+    #[test]
     #[test]
     fn solves_part1() {
         assert_eq!(
