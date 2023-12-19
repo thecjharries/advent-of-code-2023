@@ -21,6 +21,12 @@ fn main() {
     println!("Part 2: {}", part2(input));
 }
 
+#[derive(Debug, PartialEq, Eq)]
+enum ObjectState {
+    Accepted,
+    Rejected,
+}
+
 fn part1(input: String) -> usize {
     todo!()
 }
