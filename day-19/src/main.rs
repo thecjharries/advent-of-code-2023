@@ -27,6 +27,43 @@ enum ObjectState {
     Rejected,
 }
 
+#[derive(Debug, PartialEq, Eq)]
+struct Part {
+    x: usize,
+    m: usize,
+    a: usize,
+    s: usize,
+}
+
+impl Part {
+    fn from_string(input: &str) -> Self {
+        let mut part = Self {
+            x: 0,
+            m: 0,
+            a: 0,
+            s: 0,
+        };
+        let input = input.trim();
+        let input = input.trim_start_matches('{');
+        let input = input.trim_end_matches('}');
+        input
+            .split(',')
+            .map(|pair| {
+                let mut pair = pair.split('=');
+                let key = pair.next().unwrap();
+                let value = pair.next().unwrap().parse::<usize>().unwrap();
+                (key, value)
+            })
+            .for_each(|(key, value)| match key {
+                "x" => part.x = value,
+                "m" => part.m = value,
+                "a" => part.a = value,
+                _ => part.s = value,
+            });
+        part
+    }
+}
+
 fn part1(input: String) -> usize {
     todo!()
 }
@@ -39,6 +76,19 @@ fn part2(input: String) -> usize {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn parses_part() {
+        assert_eq!(
+            Part {
+                x: 787,
+                m: 2655,
+                a: 1222,
+                s: 2876,
+            },
+            Part::from_string("{x=787,m=2655,a=1222,s=2876}")
+        );
+    }
 
     #[test]
     fn solves_part1() {
