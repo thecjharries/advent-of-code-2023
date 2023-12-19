@@ -15,6 +15,8 @@
 use std::collections::HashMap;
 use std::fs::read_to_string;
 
+use evalexpr::{context_map, eval_boolean_with_context};
+
 #[cfg(not(tarpaulin_include))]
 fn main() {
     let input = read_to_string("input.txt").expect("Unable to read input file");
@@ -98,7 +100,40 @@ fn build_workflow_map(input: &str) -> HashMap<String, Vec<(String, String)>> {
 }
 
 fn part1(input: String) -> usize {
-    todo!()
+    let input = input.trim();
+    let mut input = input.split("\n\n");
+    let workflow_map = build_workflow_map(input.next().unwrap());
+    let parts = input.next().unwrap();
+    let parts = parts.lines().map(Part::from_string);
+    let mut new_parts = vec![];
+    for mut part in parts {
+        let context = context_map! {
+            "x" => part.x as i64,
+            "m" => part.m as i64,
+            "a" => part.a as i64,
+            "s" => part.s as i64,
+        }
+        .unwrap();
+        while let ObjectState::Workflow(ref current_workflow_name) = part.state {
+            let mut current_workflow = workflow_map.get(current_workflow_name).unwrap().clone();
+            while let Some((condition, next_workflow)) = current_workflow.pop() {
+                if Ok(true) == eval_boolean_with_context(&condition, &context) {
+                    match next_workflow.as_str() {
+                        "A" => part.state = ObjectState::Accepted,
+                        "R" => part.state = ObjectState::Rejected,
+                        _ => part.state = ObjectState::Workflow(next_workflow),
+                    };
+                    break;
+                }
+            }
+        }
+        new_parts.push(part);
+    }
+    new_parts
+        .iter()
+        .filter(|part| part.state == ObjectState::Accepted)
+        .map(|part| part.rating())
+        .sum()
 }
 
 fn part2(input: String) -> usize {
