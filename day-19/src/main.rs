@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use std::collections::HashMap;
 use std::fs::read_to_string;
 
 #[cfg(not(tarpaulin_include))]
@@ -91,6 +92,11 @@ fn parse_workflow(input: &str) -> (String, Vec<(String, String)>) {
     (workflow_name, parts)
 }
 
+fn build_workflow_map(input: &str) -> HashMap<String, Vec<(String, String)>> {
+    let input = input.trim();
+    input.lines().map(parse_workflow).collect()
+}
+
 fn part1(input: String) -> usize {
     todo!()
 }
@@ -147,6 +153,29 @@ mod tests {
             ),
             parse_workflow(input)
         );
+    }
+
+    #[test]
+    fn builds_a_map_of_all_workflows() {
+        let input = "px{a<2006:qkq,m>2090:A,rfg}
+        pv{a>1716:R,A}";
+        let mut expected = HashMap::new();
+        expected.insert(
+            "px".to_string(),
+            vec![
+                ("a<2006".to_string(), "qkq".to_string()),
+                ("m>2090".to_string(), "A".to_string()),
+                ("true".to_string(), "rfg".to_string()),
+            ],
+        );
+        expected.insert(
+            "pv".to_string(),
+            vec![
+                ("a>1716".to_string(), "R".to_string()),
+                ("true".to_string(), "A".to_string()),
+            ],
+        );
+        assert_eq!(expected, build_workflow_map(input));
     }
 
     #[test]
