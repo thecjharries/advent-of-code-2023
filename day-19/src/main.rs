@@ -62,6 +62,10 @@ impl Part {
             });
         part
     }
+
+    fn rating(&self) -> usize {
+        self.x + self.m + self.a + self.s
+    }
 }
 
 fn part1(input: String) -> usize {
@@ -87,6 +91,20 @@ mod tests {
                 s: 2876,
             },
             Part::from_string("{x=787,m=2655,a=1222,s=2876}")
+        );
+    }
+
+    #[test]
+    fn part_rating_is_sum_of_ratings() {
+        assert_eq!(
+            787 + 2655 + 1222 + 2876,
+            Part {
+                x: 787,
+                m: 2655,
+                a: 1222,
+                s: 2876,
+            }
+            .rating()
         );
     }
 
