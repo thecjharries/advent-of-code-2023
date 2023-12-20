@@ -21,6 +21,16 @@ fn main() {
     println!("Part 2: {}", part2(input));
 }
 
+enum PulseType {
+    Low,
+    High,
+}
+
+enum FlipFlopState {
+    On,
+    Off,
+}
+
 fn part1(input: String) -> usize {
     todo!()
 }
