@@ -21,11 +21,13 @@ fn main() {
     println!("Part 2: {}", part2(input));
 }
 
-fn part1(input: String) -> usize {
+#[cfg(not(tarpaulin_include))]
+fn part1(_input: String) -> usize {
     todo!()
 }
 
-fn part2(input: String) -> usize {
+#[cfg(not(tarpaulin_include))]
+fn part2(_input: String) -> usize {
     todo!()
 }
 
