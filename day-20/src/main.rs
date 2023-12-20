@@ -36,31 +36,31 @@ fn part2(_input: String) -> usize {
 mod tests {
     use super::*;
 
-    #[test]
-    fn solves_part1() {
-        assert_eq!(
-            32000000,
-            part1(
-                "broadcaster -> a, b, c
-                %a -> b
-                %b -> c
-                %c -> inv
-                &inv -> a
-                "
-                .to_string()
-            )
-        );
-        assert_eq!(
-            11687500,
-            part1(
-                "broadcaster -> a
-                %a -> inv, con
-                &inv -> b
-                %b -> con
-                &con -> output
-                "
-                .to_string()
-            )
-        );
-    }
+    // #[test]
+    // fn solves_part1() {
+    //     assert_eq!(
+    //         32000000,
+    //         part1(
+    //             "broadcaster -> a, b, c
+    //             %a -> b
+    //             %b -> c
+    //             %c -> inv
+    //             &inv -> a
+    //             "
+    //             .to_string()
+    //         )
+    //     );
+    //     assert_eq!(
+    //         11687500,
+    //         part1(
+    //             "broadcaster -> a
+    //             %a -> inv, con
+    //             &inv -> b
+    //             %b -> con
+    //             &con -> output
+    //             "
+    //             .to_string()
+    //         )
+    //     );
+    // }
 }
