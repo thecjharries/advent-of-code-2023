@@ -69,7 +69,7 @@ fn get_possible_tails_count(map: Vec<Vec<char>>, santa: (usize, usize), max_step
 
 fn part1(input: String) -> usize {
     let (map, santa) = parse_map(&input);
-    get_possible_tails_count(map, santa, 6)
+    get_possible_tails_count(map, santa, 64)
 }
 
 fn part2(input: String) -> usize {
