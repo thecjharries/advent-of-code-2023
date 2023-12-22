@@ -67,6 +67,7 @@ fn get_possible_tails_count(map: Vec<Vec<char>>, santa: (usize, usize), max_step
     available.len()
 }
 
+#[cfg(not(tarpaulin_include))]
 fn part1(input: String) -> usize {
     let (map, santa) = parse_map(&input);
     get_possible_tails_count(map, santa, 64)
