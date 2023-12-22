@@ -72,7 +72,8 @@ fn part1(input: String) -> usize {
     get_possible_tails_count(map, santa, 64)
 }
 
-fn part2(input: String) -> usize {
+#[cfg(not(tarpaulin_include))]
+fn part2(_input: String) -> usize {
     todo!()
 }
 
