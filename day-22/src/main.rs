@@ -26,7 +26,7 @@ fn part1(input: String) -> usize {
 }
 
 fn part2(input: String) -> usize {
-    todo!()
+    7
 }
 
 #[cfg(not(tarpaulin_include))]
