@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use std::collections::HashSet;
 use std::fs::read_to_string;
 
 #[cfg(not(tarpaulin_include))]
@@ -41,8 +42,34 @@ fn parse_map(input: &str) -> (Vec<Vec<char>>, (usize, usize)) {
     (map, santa)
 }
 
+fn get_possible_tails_count(map: Vec<Vec<char>>, santa: (usize, usize), max_steps: usize) -> usize {
+    let mut traversed = HashSet::new();
+    let mut available = HashSet::new();
+    available.insert(santa);
+    for _ in 0..max_steps {
+        traversed = available.clone();
+        available.clear();
+        for (x, y) in traversed.iter() {
+            if 0 < *x && '.' == map[*y][*x - 1] {
+                available.insert((*x - 1, *y));
+            }
+            if 0 < *y && '.' == map[*y - 1][*x] {
+                available.insert((*x, *y - 1));
+            }
+            if map[*y].len() > *x + 1 && '.' == map[*y][*x + 1] {
+                available.insert((*x + 1, *y));
+            }
+            if map.len() > *y + 1 && '.' == map[*y + 1][*x] {
+                available.insert((*x, *y + 1));
+            }
+        }
+    }
+    available.len()
+}
+
 fn part1(input: String) -> usize {
-    todo!()
+    let (map, santa) = parse_map(&input);
+    get_possible_tails_count(map, santa, 6)
 }
 
 fn part2(input: String) -> usize {
@@ -75,11 +102,9 @@ mod tests {
     }
 
     #[test]
-    fn solves_part1() {
-        assert_eq!(
-            16,
-            part1(
-                "...........
+    fn counts_proper_number_of_tails() {
+        let (map, santa) = parse_map(
+            "...........
         .....###.#.
         .###.##..#.
         ..#.#...#..
@@ -90,9 +115,10 @@ mod tests {
         .##.#.####.
         .##..##.##.
         ...........
-        "
-                .to_string()
-            )
+        ",
         );
+        assert_eq!(2, get_possible_tails_count(map.clone(), santa, 1));
+        assert_eq!(4, get_possible_tails_count(map.clone(), santa, 2));
+        assert_eq!(16, get_possible_tails_count(map, santa, 6));
     }
 }
