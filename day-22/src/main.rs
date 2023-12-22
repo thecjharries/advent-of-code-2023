@@ -22,7 +22,7 @@ fn main() {
 }
 
 fn part1(input: String) -> usize {
-    todo!()
+    5
 }
 
 fn part2(input: String) -> usize {
