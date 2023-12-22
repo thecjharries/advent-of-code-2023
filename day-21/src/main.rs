@@ -21,6 +21,26 @@ fn main() {
     println!("Part 2: {}", part2(input));
 }
 
+fn parse_map(input: &str) -> (Vec<Vec<char>>, (usize, usize)) {
+    let input = input.trim();
+    let mut map = Vec::new();
+    let mut santa = (0, 0);
+    for (y, line) in input.lines().enumerate() {
+        let line = line.trim();
+        let mut row = Vec::new();
+        for (x, character) in line.chars().enumerate() {
+            if 'S' == character {
+                santa = (x, y);
+                row.push('.');
+            } else {
+                row.push(character);
+            }
+        }
+        map.push(row);
+    }
+    (map, santa)
+}
+
 fn part1(input: String) -> usize {
     todo!()
 }
@@ -33,6 +53,26 @@ fn part2(input: String) -> usize {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn parses_map() {
+        let input = "...........
+        .....###.#.
+        .###.##..#.
+        ..#.#...#..
+        ....#.#....
+        .##..S####.
+        .##..#...#.
+        .......##..
+        .##.#.####.
+        .##..##.##.
+        ...........
+        ";
+        let (map, santa) = parse_map(input);
+        assert_eq!(11, map.len());
+        assert_eq!(11, map[0].len());
+        assert_eq!((5, 5), santa);
+    }
 
     #[test]
     fn solves_part1() {
