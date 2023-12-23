@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use std::collections::{BinaryHeap, HashMap};
 use std::fs::read_to_string;
 
 #[cfg(not(tarpaulin_include))]
@@ -19,14 +20,6 @@ fn main() {
     let input = read_to_string("input.txt").expect("Unable to read input file");
     println!("Part 1: {}", part1(input.clone()));
     println!("Part 2: {}", part2(input));
-}
-
-#[derive(Debug, PartialEq, Eq)]
-enum Direction {
-    North,
-    East,
-    South,
-    West,
 }
 
 #[derive(Debug, PartialEq, Eq)]
@@ -87,10 +80,68 @@ impl Map {
             exit,
         }
     }
+
+    fn find_longest_path(&self) -> usize {
+        let mut queue = BinaryHeap::new();
+        let mut visited = HashMap::new();
+        queue.push((0, self.entrance.0, self.entrance.1));
+        while let Some((steps, x, y)) = queue.pop() {
+            if x == self.exit.0 && y == self.exit.1 {
+                return steps;
+            }
+            if let Some(visited_steps) = visited.get(&(x, y)) {
+                if visited_steps <= &steps {
+                    continue;
+                }
+            }
+            visited.insert((x, y), steps);
+            let mut possible_moves = Vec::new();
+            if Tile::Empty == self.tiles[y][x] {
+                if 0 < y
+                    && Tile::Wall != self.tiles[y - 1][x]
+                    && Tile::SouthDownSlope != self.tiles[y - 1][x]
+                {
+                    possible_moves.push((x, y - 1));
+                }
+                if 0 < x
+                    && Tile::Wall != self.tiles[y][x - 1]
+                    && Tile::EastDownSlope != self.tiles[y][x - 1]
+                {
+                    possible_moves.push((x - 1, y));
+                }
+                if y < self.tiles.len() - 1
+                    && Tile::Wall != self.tiles[y + 1][x]
+                    && Tile::NorthDownSlope != self.tiles[y + 1][x]
+                {
+                    possible_moves.push((x, y + 1));
+                }
+                if x < self.tiles[y].len() - 1
+                    && Tile::Wall != self.tiles[y][x + 1]
+                    && Tile::WestDownSlope != self.tiles[y][x + 1]
+                {
+                    possible_moves.push((x + 1, y));
+                }
+            } else if Tile::NorthDownSlope == self.tiles[y][x] {
+                possible_moves.push((x, y - 1));
+            } else if Tile::EastDownSlope == self.tiles[y][x] {
+                possible_moves.push((x + 1, y));
+            } else if Tile::SouthDownSlope == self.tiles[y][x] {
+                possible_moves.push((x, y + 1));
+            } else if Tile::WestDownSlope == self.tiles[y][x] {
+                possible_moves.push((x - 1, y));
+            }
+            possible_moves.into_iter().for_each(|(new_x, new_y)| {
+                let new_steps = steps + 1;
+                queue.push((new_steps, new_x, new_y));
+            });
+        }
+        unreachable!()
+    }
 }
 
 fn part1(input: String) -> usize {
-    todo!()
+    let map = Map::from_string(input);
+    map.find_longest_path()
 }
 
 fn part2(input: String) -> usize {
