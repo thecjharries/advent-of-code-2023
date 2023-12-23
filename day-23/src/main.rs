@@ -59,6 +59,36 @@ struct Map {
     exit: (usize, usize),
 }
 
+impl Map {
+    fn from_string(input: String) -> Self {
+        let input = input.trim();
+        let mut lines = input.lines().collect::<Vec<&str>>();
+        let mut tiles = Vec::new();
+        let mut entrance = (0, 0);
+        let mut exit = (0, 0);
+        for (y, line) in lines.iter().enumerate() {
+            let line = line.trim();
+            let mut row = Vec::new();
+            for (x, character) in line.chars().enumerate() {
+                let tile = Tile::from_char(character);
+                if 0 == y && '.' == character {
+                    entrance = (x, y);
+                }
+                if lines.len() - 1 == y && '.' == character {
+                    exit = (x, y);
+                }
+                row.push(tile);
+            }
+            tiles.push(row);
+        }
+        Self {
+            tiles,
+            entrance,
+            exit,
+        }
+    }
+}
+
 fn part1(input: String) -> usize {
     todo!()
 }
@@ -80,6 +110,27 @@ mod tests {
         assert_eq!(Tile::EastDownSlope, Tile::from_char('>'));
         assert_eq!(Tile::SouthDownSlope, Tile::from_char('v'));
         assert_eq!(Tile::WestDownSlope, Tile::from_char('<'));
+    }
+
+    #[test]
+    fn parses_map_from_string() {
+        let input = "##.#
+        #..#
+        #v##
+        #.##
+        "
+        .to_string();
+        let expected = Map {
+            tiles: vec![
+                vec![Tile::Wall, Tile::Wall, Tile::Empty, Tile::Wall],
+                vec![Tile::Wall, Tile::Empty, Tile::Empty, Tile::Wall],
+                vec![Tile::Wall, Tile::SouthDownSlope, Tile::Wall, Tile::Wall],
+                vec![Tile::Wall, Tile::Empty, Tile::Wall, Tile::Wall],
+            ],
+            entrance: (2, 0),
+            exit: (1, 3),
+        };
+        assert_eq!(expected, Map::from_string(input));
     }
 
     #[test]
