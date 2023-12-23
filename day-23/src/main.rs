@@ -39,6 +39,19 @@ enum Tile {
     WestDownSlope,
 }
 
+impl Tile {
+    fn from_char(character: char) -> Self {
+        match character {
+            '.' => Self::Empty,
+            '>' => Self::EastDownSlope,
+            '<' => Self::WestDownSlope,
+            '^' => Self::NorthDownSlope,
+            'v' => Self::SouthDownSlope,
+            _ => Self::Wall,
+        }
+    }
+}
+
 #[derive(Debug, PartialEq, Eq)]
 struct Map {
     tiles: Vec<Vec<Tile>>,
@@ -58,6 +71,16 @@ fn part2(input: String) -> usize {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn parses_tile_from_char() {
+        assert_eq!(Tile::Empty, Tile::from_char('.'));
+        assert_eq!(Tile::Wall, Tile::from_char('#'));
+        assert_eq!(Tile::NorthDownSlope, Tile::from_char('^'));
+        assert_eq!(Tile::EastDownSlope, Tile::from_char('>'));
+        assert_eq!(Tile::SouthDownSlope, Tile::from_char('v'));
+        assert_eq!(Tile::WestDownSlope, Tile::from_char('<'));
+    }
 
     #[test]
     fn solves_part1() {
