@@ -39,6 +39,13 @@ enum Tile {
     WestDownSlope,
 }
 
+#[derive(Debug, PartialEq, Eq)]
+struct Map {
+    tiles: Vec<Vec<Tile>>,
+    entrance: (usize, usize),
+    exit: (usize, usize),
+}
+
 fn part1(input: String) -> usize {
     todo!()
 }
