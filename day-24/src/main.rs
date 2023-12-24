@@ -21,10 +21,10 @@ fn main() {
     println!("Part 2: {}", part2(input));
 }
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq)]
 struct Hailstone {
-    position: (isize, isize, isize),
-    velocity: (isize, isize, isize),
+    position: (f64, f64, f64),
+    velocity: (f64, f64, f64),
 }
 
 impl Hailstone {
@@ -67,8 +67,8 @@ mod tests {
     fn hailstone_parses_from_input() {
         assert_eq!(
             Hailstone {
-                position: (19, 13, 30),
-                velocity: (-2, 1, -2)
+                position: (19.0, 13.0, 30.0),
+                velocity: (-2.0, 1.0, -2.0)
             },
             Hailstone::from_str("19, 13, 30 @ -2,  1, -2")
         );
