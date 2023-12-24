@@ -49,7 +49,7 @@ impl Hailstone {
         }
     }
 
-    fn crosses_pathes_in_test_area(&self, other: Self, min: f64, max: f64) -> bool {
+    fn crosses_pathes_in_test_area(&self, other: &Self, min: f64, max: f64) -> bool {
         let determinant =
             (self.velocity.1 * other.velocity.0) - (self.velocity.0 * other.velocity.1);
         if 0.0 == determinant {
@@ -58,9 +58,16 @@ impl Hailstone {
         let d_x = other.position.0 - self.position.0;
         let d_y = other.position.1 - self.position.1;
         let u = ((self.velocity.0 * d_y) - (self.velocity.1 * d_x)) / determinant;
+        if u < 0.0 {
+            return false;
+        }
+        let v = ((other.velocity.0 * d_y) - (other.velocity.1 * d_x)) / determinant;
+        if v < 0.0 {
+            return false;
+        }
         let point = (
-            (self.position.0 + (u * self.velocity.0).round()),
-            (self.position.1 + (u * self.velocity.1).round()),
+            (self.position.0 + (v * self.velocity.0)),
+            (self.position.1 + (u * self.velocity.1)),
         );
         if point.0 < min || point.0 > max || point.1 < min || point.1 > max {
             return false;
