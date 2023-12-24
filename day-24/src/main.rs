@@ -96,7 +96,8 @@ fn find_intersection_count_in_test_area(hailstones: Vec<Hailstone>, min: f64, ma
 }
 
 fn part1(input: String) -> usize {
-    todo!()
+    let hailstones = parse_input(input);
+    find_intersection_count_in_test_area(hailstones, 200000000000000.0, 400000000000000.0)
 }
 
 fn part2(input: String) -> usize {
