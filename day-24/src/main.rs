@@ -95,12 +95,14 @@ fn find_intersection_count_in_test_area(hailstones: Vec<Hailstone>, min: f64, ma
     intersection_count
 }
 
+#[cfg(not(tarpaulin_include))]
 fn part1(input: String) -> usize {
     let hailstones = parse_input(input);
     find_intersection_count_in_test_area(hailstones, 200000000000000.0, 400000000000000.0)
 }
 
-fn part2(input: String) -> usize {
+#[cfg(not(tarpaulin_include))]
+fn part2(_input: String) -> usize {
     todo!()
 }
 
@@ -167,21 +169,5 @@ mod tests {
             2,
             find_intersection_count_in_test_area(hailstones, 7.0, 27.0)
         );
-    }
-
-    #[test]
-    fn solves_part1() {
-        assert_eq!(
-            2,
-            part1(
-                "19, 13, 30 @ -2,  1, -2
-                18, 19, 22 @ -1, -1, -2
-                20, 25, 34 @ -2, -2, -4
-                12, 31, 28 @ -1, -2, -1
-                20, 19, 15 @  1, -5, -3
-                "
-                .to_string()
-            )
-        )
     }
 }
