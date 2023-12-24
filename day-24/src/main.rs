@@ -21,6 +21,12 @@ fn main() {
     println!("Part 2: {}", part2(input));
 }
 
+#[derive(Debug, PartialEq, Eq)]
+struct Hailstone {
+    position: (isize, isize, isize),
+    velocity: (isize, isize, isize),
+}
+
 fn part1(input: String) -> usize {
     todo!()
 }
@@ -44,7 +50,8 @@ mod tests {
                 20, 25, 34 @ -2, -2, -4
                 12, 31, 28 @ -1, -2, -1
                 20, 19, 15 @  1, -5, -3
-                ".to_string()
+                "
+                .to_string()
             )
         )
     }
