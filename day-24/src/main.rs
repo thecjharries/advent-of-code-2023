@@ -35,18 +35,37 @@ impl Hailstone {
             .next()
             .expect("Unable to get position")
             .split(',')
-            .map(|x| x.trim().parse::<isize>().expect("Unable to parse position"))
-            .collect::<Vec<isize>>();
+            .map(|x| x.trim().parse::<f64>().expect("Unable to parse position"))
+            .collect::<Vec<f64>>();
         let velocity = parts
             .next()
             .expect("Unable to get velocity")
             .split(',')
-            .map(|x| x.trim().parse::<isize>().expect("Unable to parse velocity"))
-            .collect::<Vec<isize>>();
+            .map(|x| x.trim().parse::<f64>().expect("Unable to parse velocity"))
+            .collect::<Vec<f64>>();
         Self {
             position: (position[0], position[1], position[2]),
             velocity: (velocity[0], velocity[1], velocity[2]),
         }
+    }
+
+    fn crosses_pathes_in_test_area(&self, other: Self, min: f64, max: f64) -> bool {
+        let determinant =
+            (self.velocity.1 * other.velocity.0) - (self.velocity.0 * other.velocity.1);
+        if 0.0 == determinant {
+            return false;
+        }
+        let d_x = other.position.0 - self.position.0;
+        let d_y = other.position.1 - self.position.1;
+        let u = ((self.velocity.0 * d_y) - (self.velocity.1 * d_x)) / determinant;
+        let point = (
+            (self.position.0 + (u * self.velocity.0).round()),
+            (self.position.1 + (u * self.velocity.1).round()),
+        );
+        if point.0 < min || point.0 > max || point.1 < min || point.1 > max {
+            return false;
+        }
+        true
     }
 }
 
@@ -72,6 +91,22 @@ mod tests {
             },
             Hailstone::from_str("19, 13, 30 @ -2,  1, -2")
         );
+    }
+
+    #[test]
+    fn hailstone_crosses_pathes_in_test_area() {
+        let hailstone = Hailstone {
+            position: (19.0, 13.0, 30.0),
+            velocity: (-2.0, 1.0, -2.0),
+        };
+        assert!(hailstone.crosses_pathes_in_test_area(
+            Hailstone {
+                position: (18.0, 19.0, 22.0),
+                velocity: (-1.0, -1.0, -2.0)
+            },
+            7.0,
+            27.0
+        ));
     }
 
     #[test]
