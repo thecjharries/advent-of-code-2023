@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use itertools::Itertools;
 use std::fs::read_to_string;
 
 #[cfg(not(tarpaulin_include))]
@@ -84,6 +85,16 @@ fn parse_input(input: String) -> Vec<Hailstone> {
         .collect::<Vec<Hailstone>>()
 }
 
+fn find_intersection_count_in_test_area(hailstones: Vec<Hailstone>, min: f64, max: f64) -> usize {
+    let mut intersection_count = 0;
+    for combination in hailstones.iter().combinations(2) {
+        if combination[0].crosses_pathes_in_test_area(combination[1], min, max) {
+            intersection_count += 1;
+        }
+    }
+    intersection_count
+}
+
 fn part1(input: String) -> usize {
     todo!()
 }
@@ -115,7 +126,7 @@ mod tests {
             velocity: (-2.0, 1.0, -2.0),
         };
         assert!(hailstone.crosses_pathes_in_test_area(
-            Hailstone {
+            &Hailstone {
                 position: (18.0, 19.0, 22.0),
                 velocity: (-1.0, -1.0, -2.0)
             },
@@ -137,6 +148,23 @@ mod tests {
                 "
                 .to_string()
             )
+        );
+    }
+
+    #[test]
+    fn finds_all_intersections_in_test_area() {
+        let hailstones = parse_input(
+            "19, 13, 30 @ -2,  1, -2
+            18, 19, 22 @ -1, -1, -2
+            20, 25, 34 @ -2, -2, -4
+            12, 31, 28 @ -1, -2, -1
+            20, 19, 15 @  1, -5, -3
+            "
+            .to_string(),
+        );
+        assert_eq!(
+            2,
+            find_intersection_count_in_test_area(hailstones, 7.0, 27.0)
         );
     }
 
