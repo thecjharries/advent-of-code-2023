@@ -69,6 +69,14 @@ impl Hailstone {
     }
 }
 
+fn parse_input(input: String) -> Vec<Hailstone> {
+    let input = input.trim();
+    input
+        .lines()
+        .map(|x| Hailstone::from_str(x))
+        .collect::<Vec<Hailstone>>()
+}
+
 fn part1(input: String) -> usize {
     todo!()
 }
@@ -107,6 +115,22 @@ mod tests {
             7.0,
             27.0
         ));
+    }
+
+    #[test]
+    fn parses_all_hailstones_from_input() {
+        assert_eq!(
+            vec![Hailstone {
+                position: (19.0, 13.0, 30.0),
+                velocity: (-2.0, 1.0, -2.0)
+            }],
+            parse_input(
+                "
+                19, 13, 30 @ -2,  1, -2
+                "
+                .to_string()
+            )
+        );
     }
 
     #[test]
