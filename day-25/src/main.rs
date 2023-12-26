@@ -15,10 +15,10 @@
 use std::collections::BTreeMap;
 use std::fs::read_to_string;
 
-use petgraph::algo::{dijkstra, min_spanning_tree};
-use petgraph::data::FromElements;
-use petgraph::dot::{Config, Dot};
-use petgraph::graph::{NodeIndex, UnGraph};
+// use petgraph::algo::{dijkstra, min_spanning_tree};
+// use petgraph::data::FromElements;
+// use petgraph::dot::{Config, Dot};
+// use petgraph::graph::{NodeIndex, UnGraph};
 
 #[cfg(not(tarpaulin_include))]
 fn main() {
@@ -27,49 +27,49 @@ fn main() {
     println!("Part 2: {}", part2(input));
 }
 
-fn create_graph(input: &str) -> UnGraph<i32, ()> {
-    let mut nodes = Vec::new();
-    let mut edges: Vec<(i32, i32)> = Vec::new();
-    let input = input.trim();
-    let lines = input.lines().map(|x| x.trim()).collect::<Vec<&str>>();
-    for line in lines {
-        println!("{}", line);
-        let mut parts = line.split(':');
-        let node = parts.next().expect("Unable to get node");
-        let node_index = match nodes.iter().position(|x| x == &node) {
-            Some(index) => index + 1,
-            None => {
-                nodes.push(node);
-                nodes.len()
-            }
-        };
-        let children = parts
-            .next()
-            .expect("Unable to get children")
-            .split_whitespace()
-            .collect::<Vec<&str>>();
-        for child in children {
-            let child_index = match nodes.iter().position(|x| x == &child) {
-                Some(index) => index + 1,
-                None => {
-                    nodes.push(child);
-                    nodes.len()
-                }
-            };
-            if node_index < child_index {
-                edges.push((node_index as i32, child_index as i32));
-            } else {
-                edges.push((child_index as i32, node_index as i32));
-            }
-        }
-    }
-    // println!("{:?}", edges);
-    // UnGraph::<(), i32>::from_edges(&edges)
-    // let new_edges = vec![(1, 2), (2, 3), (3, 4), (1, 4)];
-    // println!("{:?}", new_edges);
-    // assert_eq!(edges, new_edges);
-    UnGraph::<i32, ()>::from_edges(&edges)
-}
+// fn create_graph(input: &str) -> UnGraph<i32, ()> {
+//     let mut nodes = Vec::new();
+//     let mut edges: Vec<(i32, i32)> = Vec::new();
+//     let input = input.trim();
+//     let lines = input.lines().map(|x| x.trim()).collect::<Vec<&str>>();
+//     for line in lines {
+//         println!("{}", line);
+//         let mut parts = line.split(':');
+//         let node = parts.next().expect("Unable to get node");
+//         let node_index = match nodes.iter().position(|x| x == &node) {
+//             Some(index) => index + 1,
+//             None => {
+//                 nodes.push(node);
+//                 nodes.len()
+//             }
+//         };
+//         let children = parts
+//             .next()
+//             .expect("Unable to get children")
+//             .split_whitespace()
+//             .collect::<Vec<&str>>();
+//         for child in children {
+//             let child_index = match nodes.iter().position(|x| x == &child) {
+//                 Some(index) => index + 1,
+//                 None => {
+//                     nodes.push(child);
+//                     nodes.len()
+//                 }
+//             };
+//             if node_index < child_index {
+//                 edges.push((node_index as i32, child_index as i32));
+//             } else {
+//                 edges.push((child_index as i32, node_index as i32));
+//             }
+//         }
+//     }
+//     // println!("{:?}", edges);
+//     // UnGraph::<(), i32>::from_edges(&edges)
+//     // let new_edges = vec![(1, 2), (2, 3), (3, 4), (1, 4)];
+//     // println!("{:?}", new_edges);
+//     // assert_eq!(edges, new_edges);
+//     UnGraph::<i32, ()>::from_edges(&edges)
+// }
 
 fn part1(input: String) -> usize {
     todo!()
@@ -83,17 +83,6 @@ fn part2(input: String) -> usize {
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    #[test]
-    fn can_create_undirected_graph() {
-        let input = "jqt: rhn
-        rhn: xhk
-        xhk: hfx
-        hfx: jqt
-        ";
-        let graph = create_graph(input);
-        assert_eq!(4, graph.node_count());
-    }
 
     #[test]
     fn solves_part1() {
