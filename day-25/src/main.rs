@@ -15,7 +15,9 @@
 use std::collections::BTreeMap;
 use std::fs::read_to_string;
 
+use petgraph::algo::{dijkstra, min_spanning_tree};
 use petgraph::data::FromElements;
+use petgraph::dot::{Config, Dot};
 use petgraph::graph::{NodeIndex, UnGraph};
 
 #[cfg(not(tarpaulin_include))]
@@ -26,42 +28,47 @@ fn main() {
 }
 
 fn create_graph(input: &str) -> UnGraph<i32, ()> {
-    let mut nodes = BTreeMap::new();
-    let mut graph = UnGraph::<i32, ()>::from_elements(vec![]);
-    for line in input.lines() {
-        let mut parts = line.split(": ");
+    let mut nodes = Vec::new();
+    let mut edges: Vec<(i32, i32)> = Vec::new();
+    let input = input.trim();
+    let lines = input.lines().map(|x| x.trim()).collect::<Vec<&str>>();
+    for line in lines {
+        println!("{}", line);
+        let mut parts = line.split(':');
         let node = parts.next().expect("Unable to get node");
-        let edges = parts
-            .next()
-            .expect("Unable to get edges")
-            .split(' ')
-            .map(|x| x.trim())
-            .collect::<Vec<&str>>();
-        let node_index = if let Some(node_index) = nodes.get(node) {
-            *node_index
-        } else {
-            let node_index = nodes.len() as i32;
-            nodes.insert(node, node_index);
-            graph.add_node(node_index);
-            node_index
+        let node_index = match nodes.iter().position(|x| x == &node) {
+            Some(index) => index + 1,
+            None => {
+                nodes.push(node);
+                nodes.len()
+            }
         };
-        for edge in edges {
-            let edge_index = if let Some(edge_index) = nodes.get(edge) {
-                *edge_index
-            } else {
-                let edge_index = nodes.len() as i32;
-                nodes.insert(edge, edge_index);
-                graph.add_node(edge_index);
-                edge_index
+        let children = parts
+            .next()
+            .expect("Unable to get children")
+            .split_whitespace()
+            .collect::<Vec<&str>>();
+        for child in children {
+            let child_index = match nodes.iter().position(|x| x == &child) {
+                Some(index) => index + 1,
+                None => {
+                    nodes.push(child);
+                    nodes.len()
+                }
             };
-            graph.add_edge(
-                NodeIndex::new(node_index as usize),
-                NodeIndex::new(edge_index as usize),
-                (),
-            );
+            if node_index < child_index {
+                edges.push((node_index as i32, child_index as i32));
+            } else {
+                edges.push((child_index as i32, node_index as i32));
+            }
         }
     }
-    graph
+    // println!("{:?}", edges);
+    // UnGraph::<(), i32>::from_edges(&edges)
+    // let new_edges = vec![(1, 2), (2, 3), (3, 4), (1, 4)];
+    // println!("{:?}", new_edges);
+    // assert_eq!(edges, new_edges);
+    UnGraph::<i32, ()>::from_edges(&edges)
 }
 
 fn part1(input: String) -> usize {
@@ -80,7 +87,9 @@ mod tests {
     #[test]
     fn can_create_undirected_graph() {
         let input = "jqt: rhn
-        rsh: frs jqt
+        rhn: xhk
+        xhk: hfx
+        hfx: jqt
         ";
         let graph = create_graph(input);
         assert_eq!(4, graph.node_count());
