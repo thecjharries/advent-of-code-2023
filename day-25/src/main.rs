@@ -33,4 +33,28 @@ fn part2(input: String) -> usize {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn solves_part1() {
+        assert_eq!(
+            54,
+            part1(
+                "jqt: rhn xhk nvd
+                rsh: frs pzl lsr
+                xhk: hfx
+                cmg: qnr nvd lhk bvb
+                rhn: xhk bvb hfx
+                bvb: xhk hfx
+                pzl: lsr hfx nvd
+                qnr: nvd
+                ntq: jqt hfx bvb xhk
+                nvd: lhk
+                lsr: lhk
+                rzs: qnr cmg lsr rsh
+                frs: qnr lhk lsr
+                "
+                .to_string()
+            )
+        )
+    }
 }
