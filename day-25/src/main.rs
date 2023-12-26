@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use std::collections::BTreeMap;
 use std::fs::read_to_string;
 
 // use petgraph::algo::{dijkstra, min_spanning_tree};
